@@ -139,4 +139,3 @@ public/               # Ảnh, file tĩnh
 
 ---
 
-Nếu bạn cần bổ sung phần nào chi tiết hơn (ví dụ: hướng dẫn API, hướng dẫn deploy, v.v.), hãy nói rõ nhé!

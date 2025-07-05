@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model article {
+  id         Int          @id @default(autoincrement())
+  title      String
+  content    String       @db.Text
+  createdAt  DateTime     @default(now())
+  authorId   Int?
+  category   String       @default("Chưa phân loại")
+  user       user?        @relation(fields: [authorId], references: [id], map: "Article_authorId_fkey")
+  articletag articletag[]
+  favoritedBy user[] @relation("UserFavoriteArticles")
+  views      ArticleView[]
+  comments   Comment[]
+
+  @@index([authorId], map: "Article_authorId_fkey")
+}
+
+model articletag {
+  articleId Int
+  tagId     Int
+  article   article @relation(fields: [articleId], references: [id], map: "ArticleTag_articleId_fkey")
+  tag       tag     @relation(fields: [tagId], references: [id], map: "ArticleTag_tagId_fkey")
+
+  @@id([articleId, tagId])
+  @@index([tagId], map: "ArticleTag_tagId_fkey")
+}
+
+model newsletter {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique(map: "Newsletter_email_key")
+  subscribedAt DateTime @default(now())
+  isActive     Boolean  @default(true)
+}
+
+model order {
+  id        Int         @id @default(autoincrement())
+  userId    Int
+  status    String      @default("pending")
+  total     Float
+  createdAt DateTime    @default(now())
+  updatedAt DateTime
+  user      user        @relation(fields: [userId], references: [id], map: "Order_userId_fkey")
+  orderitem orderitem[]
+
+  @@index([userId], map: "Order_userId_fkey")
+}
+
+model orderitem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Float
+  order     order   @relation(fields: [orderId], references: [id], map: "OrderItem_orderId_fkey")
+  product   product @relation(fields: [productId], references: [id], map: "OrderItem_productId_fkey")
+
+  @@index([orderId], map: "OrderItem_orderId_fkey")
+  @@index([productId], map: "OrderItem_productId_fkey")
+}
+
+model product {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  image       String?
+  category    String?
+  inStock     Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime
+  orderitem   orderitem[]
+  reviews     Review[]
+}
+
+model tag {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique(map: "Tag_name_key")
+  articletag articletag[]
+}
+
+model user {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique(map: "User_email_key")
+  password  String
+  role      String    @default("user")
+  firstName String?
+  lastName  String?
+  phone     String?
+  address   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
+  avatar    String?
+  article   article[]
+  order     order[]
+  favoriteArticles article[] @relation("UserFavoriteArticles")
+  articleViews ArticleView[]
+  reviews   Review[]
+  comments  Comment[]
+}
+
+model ArticleView {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  articleId Int
+  viewedAt  DateTime @default(now())
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, articleId])
+  @@index([userId])
+  @@index([articleId])
+  @@index([viewedAt])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  rating    Int      // 1-5 stars
+  comment   String?  @db.Text
+  verified  Boolean  @default(false) // Verified purchase
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId]) // One review per user per product
+  @@index([productId])
+  @@index([rating])
+  @@index([createdAt])
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String    @db.Text
+  userId    Int
+  articleId Int
+  parentId  Int?      // For nested replies
+  isApproved Boolean  @default(false) // Admin approval
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  user      user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   article   @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+
+  @@index([articleId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([isApproved])
+  @@index([createdAt])
+}

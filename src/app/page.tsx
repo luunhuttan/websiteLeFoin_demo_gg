@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import Head from 'next/head';
 import { useLanguage } from '@/components/LanguageProvider';
 import { useSearchParams } from 'next/navigation';
@@ -33,7 +33,8 @@ const categoriesData = [
   { vi: 'Sống xanh', en: 'Green Living' },
 ];
 
-export default function HomePage() {
+// Component that uses useSearchParams
+function HomePageContent() {
   const { t, locale } = useLanguage();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
@@ -435,5 +436,14 @@ export default function HomePage() {
         </button>
       )}
     </>
+  );
+}
+
+// Main component with Suspense boundary
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div style={{textAlign:'center',padding:40}}>Đang tải...</div>}>
+      <HomePageContent />
+    </Suspense>
   );
 } 

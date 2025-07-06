@@ -193,9 +193,15 @@ export default function AdminArticlesPage() {
       vi: { title: editTitle.vi, excerpt: editExcerpt.vi, content: editContent.vi, image: editImage },
       en: { title: editTitle.en, excerpt: editExcerpt.en, content: editContent.en, image: editImage }
     });
+    if (!session.data || !session.data.user) {
+      setEditError("Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn.");
+      setEditLoading(false);
+      return;
+    }
+    const user = session.data.user;
     const res = await fetch(`/api/articles/${editId}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${JSON.stringify(session.data.user)}` },
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${JSON.stringify(user)}` },
       body: JSON.stringify({ title: editTitle.vi, content, tags: tagsToSend })
     });
     if (res.ok) {
@@ -272,7 +278,7 @@ export default function AdminArticlesPage() {
     );
   }
 
-  if (!session.data.user || session.data.user.role !== 'admin') {
+  if (!session.data || !session.data.user || session.data.user.role !== 'admin') {
     return (
       <div style={{ 
         textAlign: "center", 

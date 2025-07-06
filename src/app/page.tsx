@@ -59,7 +59,12 @@ function HomePageContent() {
     fetch('/api/articles')
       .then(res => res.json())
       .then((data: Article[]) => {
-        setArticles(Array.isArray(data) ? data : []);
+        if (!Array.isArray(data)) {
+          console.error('API /api/articles trả về không phải mảng:', data);
+          setArticles([]);
+        } else {
+          setArticles(data);
+        }
         setLoading(false);
       });
   }, []);
@@ -68,10 +73,11 @@ function HomePageContent() {
     fetch('/api/tags')
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data)) {
-          setTags(['Tất cả', ...data.map((t: any) => t.name)]);
-        } else {
+        if (!Array.isArray(data)) {
+          console.error('API /api/tags trả về không phải mảng:', data);
           setTags(['Tất cả']);
+        } else {
+          setTags(['Tất cả', ...data.map((t: any) => t.name)]);
         }
       });
   }, []);
@@ -157,6 +163,10 @@ function HomePageContent() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Before rendering tags and paginatedArticles, log their values
+  console.log('tags:', tags);
+  console.log('paginatedArticles:', paginatedArticles);
 
   if (loading) return <div style={{textAlign:'center',padding:40}}>Đang tải bài viết...</div>;
   if (!featuredArticle) return <div style={{textAlign:'center',padding:40}}>Chưa có bài viết nào.</div>;

@@ -49,7 +49,10 @@ export const authOptions = {
       },
       async authorize(credentials, req) {
         // Gọi API backend để xác thực user
-        const res = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+        // Sử dụng URL tuyệt đối với fallback an toàn
+        const baseUrl = process.env.NEXTAUTH_URL || 
+                       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+        const res = await fetch(`${baseUrl}/api/auth/login`, {
           method: 'POST',
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

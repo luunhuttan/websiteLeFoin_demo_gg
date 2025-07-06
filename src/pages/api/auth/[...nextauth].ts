@@ -6,7 +6,6 @@ import LinkedInProvider from 'next-auth/providers/linkedin';
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { SessionStrategy } from 'next-auth';
 import prisma from "@/lib/prisma";
-import { cleanUrl } from "@/lib/utils";
 
 // Extend NextAuth types
 declare module "next-auth" {
@@ -39,20 +38,43 @@ declare module "next-auth/jwt" {
   }
 }
 
-// Helper function to get base URL safely
-function getBaseUrl(): string {
-  // During build time, return a safe fallback
-  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
-    return 'https://website-le-foin-demo-gg.vercel.app';
+// Safe environment variable access
+function getSafeEnvVar(key: string, fallback: string = ''): string {
+  try {
+    return process.env[key] || fallback;
+  } catch {
+    return fallback;
   }
-  
-  let rawUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-  return cleanUrl(rawUrl);
 }
 
-console.log('DEBUG NEXTAUTH_URL:', process.env.NEXTAUTH_URL);
-console.log('DEBUG VERCEL_URL:', process.env.VERCEL_URL);
-console.log('DEBUG BASE_URL:', getBaseUrl());
+// Safe URL construction
+function getSafeUrl(): string {
+  try {
+    // During build time, return safe fallback
+    if (typeof window === 'undefined') {
+      return 'https://website-le-foin-demo-gg.vercel.app';
+    }
+    
+    const nextAuthUrl = getSafeEnvVar('NEXTAUTH_URL');
+    const vercelUrl = getSafeEnvVar('VERCEL_URL');
+    
+    if (nextAuthUrl) {
+      // Clean the URL if it has spaces
+      return nextAuthUrl.trim().replace(/\s+/g, '');
+    }
+    
+    if (vercelUrl) {
+      return `https://${vercelUrl}`;
+    }
+    
+    return 'http://localhost:3000';
+  } catch {
+    return 'https://website-le-foin-demo-gg.vercel.app';
+  }
+}
+
+const baseUrl = getSafeUrl();
+console.log('DEBUG BASE_URL:', baseUrl);
 
 export const authOptions = {
   // adapter: PrismaAdapter(prisma), // Bỏ comment nếu muốn lưu user vào DB
@@ -66,8 +88,6 @@ export const authOptions = {
       async authorize(credentials, req) {
         try {
           // Gọi API backend để xác thực user
-          // Sử dụng URL tuyệt đối với fallback an toàn
-          const baseUrl = getBaseUrl();
           const res = await fetch(`${baseUrl}/api/auth/login`, {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
@@ -88,20 +108,20 @@ export const authOptions = {
       }
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      clientId: getSafeEnvVar('GOOGLE_CLIENT_ID'),
+      clientSecret: getSafeEnvVar('GOOGLE_CLIENT_SECRET'),
     }),
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID || '',
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || '',
+      clientId: getSafeEnvVar('FACEBOOK_CLIENT_ID'),
+      clientSecret: getSafeEnvVar('FACEBOOK_CLIENT_SECRET'),
     }),
     GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID || '',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+      clientId: getSafeEnvVar('GITHUB_CLIENT_ID'),
+      clientSecret: getSafeEnvVar('GITHUB_CLIENT_SECRET'),
     }),
     LinkedInProvider({
-      clientId: process.env.LINKEDIN_CLIENT_ID || '',
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET || '',
+      clientId: getSafeEnvVar('LINKEDIN_CLIENT_ID'),
+      clientSecret: getSafeEnvVar('LINKEDIN_CLIENT_SECRET'),
     }),
   ],
   session: {

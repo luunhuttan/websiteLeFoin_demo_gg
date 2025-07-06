@@ -1,14 +1,14 @@
 {
   "..\\components\\LanguageProvider.tsx -> @/messages/en.json": {
-    "id": 5121,
+    "id": "..\\components\\LanguageProvider.tsx -> @/messages/en.json",
     "files": [
-      "static/chunks/121.2c81cf5d37241477.js"
+      "static/chunks/_app-pages-browser_src_messages_en_json.js"
     ]
   },
   "..\\components\\LanguageProvider.tsx -> @/messages/vi.json": {
-    "id": 5730,
+    "id": "..\\components\\LanguageProvider.tsx -> @/messages/vi.json",
     "files": [
-      "static/chunks/360.edad5f67766f7856.js"
+      "static/chunks/_app-pages-browser_src_messages_vi_json.js"
     ]
   }
 }

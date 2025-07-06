@@ -13,10 +13,10 @@ export function cn(...inputs: ClassValue[]) {
 export function cleanUrl(url: string): string {
   if (!url) return '';
   
-  // During build time, return a safe fallback if the URL is malformed
+  // During build time in production, return a safe fallback
   if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
     // If the URL contains the malformed pattern, return the safe fallback
-    if (url.includes('     https://')) {
+    if (url.includes('     https://') || url.includes('https://     https://')) {
       return 'https://website-le-foin-demo-gg.vercel.app';
     }
   }
@@ -46,7 +46,7 @@ export function createSafeUrl(url: string, base?: string): URL | null {
     const cleanedUrl = cleanUrl(url);
     return new URL(cleanedUrl, base);
   } catch (error) {
-    console.error('Invalid URL:', url, error);
+    console.error('Error creating URL:', error);
     return null;
   }
 } 

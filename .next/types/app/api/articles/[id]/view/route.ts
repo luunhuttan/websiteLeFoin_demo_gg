@@ -1,4 +1,4 @@
-// File: D:\websiteLeFoin\src\app\api\articles\[id]\view\route.ts
+// File: D:\websiteLeFoin_demo_gg\src\app\api\articles\[id]\view\route.ts
 import * as entry from '../../../../../../../src/app/api/articles/[id]/view/route.js'
 import type { NextRequest } from 'next/server.js'
 

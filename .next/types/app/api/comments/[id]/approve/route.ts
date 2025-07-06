@@ -1,4 +1,4 @@
-// File: D:\websiteLeFoin\src\app\api\comments\[id]\approve\route.ts
+// File: D:\websiteLeFoin_demo_gg\src\app\api\comments\[id]\approve\route.ts
 import * as entry from '../../../../../../../src/app/api/comments/[id]/approve/route.js'
 import type { NextRequest } from 'next/server.js'
 

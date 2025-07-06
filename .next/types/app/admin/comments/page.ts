@@ -1,4 +1,4 @@
-// File: D:\websiteLeFoin\src\app\admin\comments\page.tsx
+// File: D:\websiteLeFoin_demo_gg\src\app\admin\comments\page.tsx
 import * as entry from '../../../../../src/app/admin/comments/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

@@ -59,7 +59,7 @@ function HomePageContent() {
     fetch('/api/articles')
       .then(res => res.json())
       .then((data: Article[]) => {
-        setArticles(data);
+        setArticles(Array.isArray(data) ? data : []);
         setLoading(false);
       });
   }, []);
@@ -202,7 +202,7 @@ function HomePageContent() {
         <div style={{
           textAlign: 'center', marginBottom: 32, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8
         }}>
-          {tags.map((tag, idx) => (
+          {Array.isArray(tags) && tags.map((tag, idx) => (
             <button
               key={tag}
               onClick={() => handleTagClick(tag)}
@@ -232,7 +232,7 @@ function HomePageContent() {
           ))}
         </div>
         <div className="articles-list">
-          {paginatedArticles.map((art) => (
+          {Array.isArray(paginatedArticles) && paginatedArticles.map((art) => (
             <div className="article-card" key={art.id} style={{
               borderRadius: 18,
               background: '#fff',

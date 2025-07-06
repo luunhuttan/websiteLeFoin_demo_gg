@@ -87,6 +87,7 @@ export const authOptions = {
       },
       async authorize(credentials, req) {
         try {
+          console.log("AUTHORIZE credentials:", credentials);
           // Gọi API backend để xác thực user
           const res = await fetch(`${baseUrl}/api/auth/login`, {
             method: 'POST',
@@ -97,6 +98,7 @@ export const authOptions = {
             }),
           });
           const user = await res.json();
+          console.log("AUTHORIZE response:", res.status, user);
           if (res.ok && user) {
             return user;
           }

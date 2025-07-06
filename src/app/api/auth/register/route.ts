@@ -47,6 +47,10 @@ export async function POST(req: NextRequest) {
     }), { status: 201 });
   } catch (err) {
     console.error('Register error:', err);
-    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
+    let errorMsg = 'Internal server error';
+    if (err instanceof Error) errorMsg = err.message;
+    else if (typeof err === 'string') errorMsg = err;
+    else if (err && typeof err === 'object') errorMsg = JSON.stringify(err);
+    return new Response(JSON.stringify({ error: errorMsg }), { status: 500 });
   }
 } 

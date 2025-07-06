@@ -4,6 +4,11 @@ import prisma from '@/lib/prisma';
 // GET /api/reviews/stats?productId=... - Get review statistics (all or by product)
 export async function GET(request: NextRequest) {
   try {
+    // Validate URL before creating URL object
+    if (!request.url || request.url.includes('     ')) {
+      return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
+    }
+    
     const { searchParams } = new URL(request.url);
     const productId = searchParams.get('productId');
 

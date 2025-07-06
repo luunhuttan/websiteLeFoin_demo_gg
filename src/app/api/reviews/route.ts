@@ -6,6 +6,11 @@ import prisma from '@/lib/prisma';
 // GET /api/reviews - Get reviews for a product
 export async function GET(request: NextRequest) {
   try {
+    // Validate URL before creating URL object
+    if (!request.url || request.url.includes('     ')) {
+      return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
+    }
+    
     const { searchParams } = new URL(request.url);
     const productId = searchParams.get('productId');
 
@@ -170,6 +175,11 @@ export async function DELETE(request: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Validate URL before creating URL object
+    if (!request.url || request.url.includes('     ')) {
+      return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
     }
 
     const { searchParams } = new URL(request.url);

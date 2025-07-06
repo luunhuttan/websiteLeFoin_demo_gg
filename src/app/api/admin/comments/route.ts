@@ -9,6 +9,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Validate URL before creating URL object
+  if (!req.url || req.url.includes('     ')) {
+    return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
+  }
+
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page') || '1');
   const limit = parseInt(searchParams.get('limit') || '10');

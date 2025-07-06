@@ -50,8 +50,10 @@ export const authOptions = {
       async authorize(credentials, req) {
         // Gọi API backend để xác thực user
         // Sử dụng URL tuyệt đối với fallback an toàn
-        const baseUrl = process.env.NEXTAUTH_URL || 
-                       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+        let rawUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+        // Làm sạch URL: loại bỏ khoảng trắng và lặp https://
+        rawUrl = rawUrl.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
+        const baseUrl = rawUrl;
         const res = await fetch(`${baseUrl}/api/auth/login`, {
           method: 'POST',
           headers: { "Content-Type": "application/json" },

@@ -1,1 +1,1 @@
-{"version":1,"functions":{"/api/upload":{},"/api/auth/[...nextauth]":{},"/auth":{},"/login":{},"/register":{}}}
+{"version":1,"functions":{"/login":{},"/api/upload":{},"/api/auth/[...nextauth]":{},"/register":{},"/auth":{}}}

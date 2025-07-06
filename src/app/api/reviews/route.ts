@@ -7,11 +7,12 @@ import prisma from '@/lib/prisma';
 export async function GET(request: NextRequest) {
   try {
     // Validate URL before creating URL object
-    if (!request.url || request.url.includes('     ')) {
+    let cleanUrl = request.url?.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
+    if (!cleanUrl || cleanUrl.includes('     ')) {
       return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
     }
     
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(cleanUrl);
     const productId = searchParams.get('productId');
 
     if (!productId) {
@@ -178,11 +179,12 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Validate URL before creating URL object
-    if (!request.url || request.url.includes('     ')) {
+    let cleanUrl = request.url?.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
+    if (!cleanUrl || cleanUrl.includes('     ')) {
       return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
     }
 
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(cleanUrl);
     const reviewId = searchParams.get('reviewId');
 
     if (!reviewId) {

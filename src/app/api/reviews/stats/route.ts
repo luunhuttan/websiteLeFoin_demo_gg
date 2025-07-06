@@ -5,11 +5,12 @@ import prisma from '@/lib/prisma';
 export async function GET(request: NextRequest) {
   try {
     // Validate URL before creating URL object
-    if (!request.url || request.url.includes('     ')) {
+    let cleanUrl = request.url?.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
+    if (!cleanUrl || cleanUrl.includes('     ')) {
       return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
     }
     
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(cleanUrl);
     const productId = searchParams.get('productId');
 
     // Lấy review theo sản phẩm nếu có productId, không thì lấy toàn bộ

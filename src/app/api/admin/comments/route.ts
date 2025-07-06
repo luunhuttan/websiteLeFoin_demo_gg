@@ -10,11 +10,12 @@ export async function GET(req: NextRequest) {
   }
 
   // Validate URL before creating URL object
-  if (!req.url || req.url.includes('     ')) {
+  let cleanUrl = req.url?.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
+  if (!cleanUrl || cleanUrl.includes('     ')) {
     return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
   }
 
-  const { searchParams } = new URL(req.url);
+  const { searchParams } = new URL(cleanUrl);
   const page = parseInt(searchParams.get('page') || '1');
   const limit = parseInt(searchParams.get('limit') || '10');
   const status = searchParams.get('status'); // 'approved', 'pending', 'all'

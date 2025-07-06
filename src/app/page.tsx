@@ -5,6 +5,9 @@ import { useLanguage } from '@/components/LanguageProvider';
 import { useSearchParams } from 'next/navigation';
 import ReviewSummary from '@/components/ReviewSummary';
 
+// Force dynamic rendering to prevent build-time URL construction issues
+export const dynamic = 'force-dynamic';
+
 type Article = {
   id: number;
   title: string;

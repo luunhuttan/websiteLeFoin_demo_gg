@@ -51,6 +51,9 @@ const fallbackProducts = [
   },
 ];
 
+// Force dynamic rendering to prevent build-time URL construction issues
+export const dynamic = 'force-dynamic';
+
 export default function ShopPage() {
   const { t, locale } = useLanguage();
   const [products, setProducts] = useState<ProductWithRating[]>([]);

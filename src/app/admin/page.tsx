@@ -1,6 +1,9 @@
 "use client";
 import { useRouter } from 'next/navigation';
 
+// Force dynamic rendering to prevent build-time URL construction issues
+export const dynamic = 'force-dynamic';
+
 export default function AdminDashboard() {
   const router = useRouter();
 

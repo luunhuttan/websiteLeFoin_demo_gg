@@ -3,6 +3,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+// Force dynamic rendering to prevent build-time URL construction issues
+export const dynamic = 'force-dynamic';
+
 export default function UserProfilePage() {
   const { data: session, status, update } = useSession();
   const router = useRouter();

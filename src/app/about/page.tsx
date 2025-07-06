@@ -3,6 +3,9 @@ import Head from 'next/head';
 import { useEffect, useState, useRef } from 'react';
 import { useLanguage } from '@/components/LanguageProvider';
 
+// Force dynamic rendering to prevent build-time URL construction issues
+export const dynamic = 'force-dynamic';
+
 export default function AboutPage() {
   const { t } = useLanguage();
   

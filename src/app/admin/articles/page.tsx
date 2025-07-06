@@ -14,6 +14,8 @@ interface Article {
   category?: string;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminArticlesPage() {
   const session = useSession();
   const { t } = useLanguage();

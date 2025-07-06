@@ -22,6 +22,8 @@ type ArticleParsed = {
   tags: { name: string }[];
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function ArticlesPage() {
   const { t, locale } = useLanguage();
   const [articles, setArticles] = useState<Article[]>([]);

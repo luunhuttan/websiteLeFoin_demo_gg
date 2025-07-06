@@ -24,6 +24,8 @@ interface Review {
   };
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminReviewsPage() {
   const { data: session } = useSession();
   const router = useRouter();

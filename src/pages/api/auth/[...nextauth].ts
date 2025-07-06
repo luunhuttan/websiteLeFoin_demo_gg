@@ -39,8 +39,20 @@ declare module "next-auth/jwt" {
   }
 }
 
+// Helper function to get base URL safely
+function getBaseUrl(): string {
+  // During build time, return a safe fallback
+  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+    return 'https://website-le-foin-demo-gg.vercel.app';
+  }
+  
+  let rawUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  return cleanUrl(rawUrl);
+}
+
 console.log('DEBUG NEXTAUTH_URL:', process.env.NEXTAUTH_URL);
 console.log('DEBUG VERCEL_URL:', process.env.VERCEL_URL);
+console.log('DEBUG BASE_URL:', getBaseUrl());
 
 export const authOptions = {
   // adapter: PrismaAdapter(prisma), // Bỏ comment nếu muốn lưu user vào DB
@@ -52,24 +64,27 @@ export const authOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, req) {
-        // Gọi API backend để xác thực user
-        // Sử dụng URL tuyệt đối với fallback an toàn
-        let rawUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-        // Sử dụng utility function để làm sạch URL
-        const baseUrl = cleanUrl(rawUrl);
-        const res = await fetch(`${baseUrl}/api/auth/login`, {
-          method: 'POST',
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: credentials?.email,
-            password: credentials?.password,
-          }),
-        });
-        const user = await res.json();
-        if (res.ok && user) {
-          return user;
+        try {
+          // Gọi API backend để xác thực user
+          // Sử dụng URL tuyệt đối với fallback an toàn
+          const baseUrl = getBaseUrl();
+          const res = await fetch(`${baseUrl}/api/auth/login`, {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials?.email,
+              password: credentials?.password,
+            }),
+          });
+          const user = await res.json();
+          if (res.ok && user) {
+            return user;
+          }
+          return null;
+        } catch (error) {
+          console.error('Auth error:', error);
+          return null;
         }
-        return null;
       }
     }),
     GoogleProvider({

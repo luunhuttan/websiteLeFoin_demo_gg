@@ -14,6 +14,8 @@ interface Article {
   viewedAt: string;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function UserHistoryPage() {
   const { data: session, status } = useSession();
   const router = useRouter();

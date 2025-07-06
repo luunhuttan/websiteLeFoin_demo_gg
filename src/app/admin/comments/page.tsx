@@ -37,6 +37,8 @@ interface Comment {
   };
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminCommentsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();

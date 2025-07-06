@@ -5,6 +5,9 @@ import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { FaFacebook, FaInstagram, FaPhone, FaEnvelope, FaShoppingBag } from 'react-icons/fa';
 
+// Force dynamic rendering to prevent build-time URL construction issues
+export const dynamic = 'force-dynamic';
+
 export default function ContactPage() {
   const { t } = useLanguage();
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });

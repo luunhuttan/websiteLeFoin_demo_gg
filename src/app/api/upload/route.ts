@@ -1,61 +1,41 @@
 import { NextRequest } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
-
-export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
+  const data = await req.formData();
+  const file = data.get('file') as File;
+  if (!file) return new Response(JSON.stringify({ error: 'No file uploaded' }), { status: 400 });
+
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+
+  // Lấy thông tin Cloudinary từ biến môi trường
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    return new Response(JSON.stringify({ error: 'Cloudinary config missing' }), { status: 500 });
+  }
+
+  // Tạo form data để gửi lên Cloudinary
+  const formData = new FormData();
+  formData.append('file', new Blob([buffer]));
+  formData.append('upload_preset', 'ml_default'); // Bạn có thể tạo upload preset riêng nếu muốn
+
+  // Gửi request lên Cloudinary
+  const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
   try {
-    const formData = await req.formData();
-    const file = formData.get('file') as File;
-    
-    if (!file) {
-      return new Response(JSON.stringify({ error: 'No file uploaded' }), { 
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    // Kiểm tra loại file
-    if (!file.type.startsWith('image/')) {
-      return new Response(JSON.stringify({ error: 'Invalid file type. Only images are allowed.' }), { 
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    // Kiểm tra kích thước file (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      return new Response(JSON.stringify({ error: 'File too large. Maximum size is 5MB.' }), { 
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const filename = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.]/g, '_');
-    const imagesDir = path.join(process.cwd(), 'public', 'images');
-    const filePath = path.join(imagesDir, filename);
-    
-    // Đảm bảo thư mục tồn tại
-    try {
-      await mkdir(imagesDir, { recursive: true });
-    } catch (error) {
-      console.error('Error creating images directory:', error);
-    }
-    
-    await writeFile(filePath, buffer);
-    const url = '/images/' + filename;
-    
-    return new Response(JSON.stringify({ url }), { 
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
+    const res = await fetch(uploadUrl, {
+      method: 'POST',
+      body: formData,
     });
-  } catch (error) {
-    console.error('Upload error:', error);
-    return new Response(JSON.stringify({ error: 'Internal server error' }), { 
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    const result = await res.json();
+    if (result.secure_url) {
+      return new Response(JSON.stringify({ url: result.secure_url }), { status: 200 });
+    } else {
+      return new Response(JSON.stringify({ error: result.error?.message || 'Upload failed' }), { status: 500 });
+    }
+  } catch (err) {
+    return new Response(JSON.stringify({ error: 'Upload failed' }), { status: 500 });
   }
 } 

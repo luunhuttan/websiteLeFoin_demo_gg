@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
+import { createSafeUrl } from '@/lib/utils';
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -9,13 +10,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Validate URL before creating URL object
-  let cleanUrl = req.url?.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
-  if (!cleanUrl || cleanUrl.includes('     ')) {
+  // Use the safe URL creation utility
+  const url = createSafeUrl(req.url);
+  if (!url) {
     return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
   }
 
-  const { searchParams } = new URL(cleanUrl);
+  const { searchParams } = url;
   const page = parseInt(searchParams.get('page') || '1');
   const limit = parseInt(searchParams.get('limit') || '10');
   const status = searchParams.get('status'); // 'approved', 'pending', 'all'

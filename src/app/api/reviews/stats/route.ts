@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { createSafeUrl } from '@/lib/utils';
 
 // GET /api/reviews/stats?productId=... - Get review statistics (all or by product)
 export async function GET(request: NextRequest) {
   try {
-    // Validate URL before creating URL object
-    let cleanUrl = request.url?.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
-    if (!cleanUrl || cleanUrl.includes('     ')) {
+    // Use the safe URL creation utility
+    const url = createSafeUrl(request.url);
+    if (!url) {
       return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
     }
     
-    const { searchParams } = new URL(cleanUrl);
+    const { searchParams } = url;
     const productId = searchParams.get('productId');
 
     // Lấy review theo sản phẩm nếu có productId, không thì lấy toàn bộ

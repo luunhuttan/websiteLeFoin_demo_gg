@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
+import { createSafeUrl } from '@/lib/utils';
 
 // GET /api/reviews - Get reviews for a product
 export async function GET(request: NextRequest) {
   try {
-    // Validate URL before creating URL object
-    let cleanUrl = request.url?.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
-    if (!cleanUrl || cleanUrl.includes('     ')) {
+    // Use the safe URL creation utility
+    const url = createSafeUrl(request.url);
+    if (!url) {
       return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
     }
     
-    const { searchParams } = new URL(cleanUrl);
+    const { searchParams } = url;
     const productId = searchParams.get('productId');
 
     if (!productId) {
@@ -178,13 +179,13 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Validate URL before creating URL object
-    let cleanUrl = request.url?.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
-    if (!cleanUrl || cleanUrl.includes('     ')) {
+    // Use the safe URL creation utility
+    const url = createSafeUrl(request.url);
+    if (!url) {
       return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
     }
 
-    const { searchParams } = new URL(cleanUrl);
+    const { searchParams } = url;
     const reviewId = searchParams.get('reviewId');
 
     if (!reviewId) {

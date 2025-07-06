@@ -6,6 +6,7 @@ import LinkedInProvider from 'next-auth/providers/linkedin';
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { SessionStrategy } from 'next-auth';
 import prisma from "@/lib/prisma";
+import { cleanUrl } from "@/lib/utils";
 
 // Extend NextAuth types
 declare module "next-auth" {
@@ -54,9 +55,8 @@ export const authOptions = {
         // Gọi API backend để xác thực user
         // Sử dụng URL tuyệt đối với fallback an toàn
         let rawUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-        // Làm sạch URL: loại bỏ khoảng trắng và lặp https://
-        rawUrl = rawUrl.trim().replace(/^https?:\/\/[\s]*https?:\/\//, 'https://').replace(/\s+/g, '');
-        const baseUrl = rawUrl;
+        // Sử dụng utility function để làm sạch URL
+        const baseUrl = cleanUrl(rawUrl);
         const res = await fetch(`${baseUrl}/api/auth/login`, {
           method: 'POST',
           headers: { "Content-Type": "application/json" },

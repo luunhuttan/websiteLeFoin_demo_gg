@@ -38,6 +38,9 @@ declare module "next-auth/jwt" {
   }
 }
 
+console.log('DEBUG NEXTAUTH_URL:', process.env.NEXTAUTH_URL);
+console.log('DEBUG VERCEL_URL:', process.env.VERCEL_URL);
+
 export const authOptions = {
   // adapter: PrismaAdapter(prisma), // Bỏ comment nếu muốn lưu user vào DB
   providers: [

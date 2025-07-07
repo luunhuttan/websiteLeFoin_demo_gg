@@ -122,18 +122,15 @@ export default function ShopPage() {
         </div>
       </div>
 
-      {/* Grid sản phẩm nổi bật */}
-      <div className="max-w-5xl mx-auto mb-16 px-4">
-        <h4 className="text-xl font-bold text-leaf mb-6 text-center">Một số sản phẩm nổi bật</h4>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {productImages.map((img, idx) => (
-            <div key={img} className="bg-white dark:bg-gray-800 rounded-xl shadow p-3 flex flex-col items-center">
-              <div className="relative w-28 h-28 mb-2">
-                <Image src={img} alt={`Le Foin sản phẩm ${idx + 1}`} fill className="object-contain rounded-lg" />
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Section giới thiệu thương hiệu */}
+      <div className="max-w-3xl mx-auto mb-16 px-4 text-center">
+        <h4 className="text-xl font-bold text-leaf mb-4">Về Le Foin</h4>
+        <p className="text-base md:text-lg text-gray-700 dark:text-gray-200 mb-2">
+          Le Foin là thương hiệu mỹ phẩm thiên nhiên, an toàn cho làn da Việt. Chúng tôi cam kết mang đến sản phẩm chất lượng, nguồn gốc rõ ràng, được kiểm định và nhận được sự tin tưởng của hàng ngàn khách hàng.
+        </p>
+        <p className="text-base md:text-lg text-gray-700 dark:text-gray-200">
+          Mua hàng tại Shopee Le Foin để nhận ưu đãi độc quyền, giao hàng nhanh và dịch vụ chăm sóc khách hàng tận tâm.
+        </p>
       </div>
     </div>
   );

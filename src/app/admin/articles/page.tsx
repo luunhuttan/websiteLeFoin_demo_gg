@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLanguage } from "@/components/LanguageProvider";
+import { FaStar, FaShieldAlt, FaGift, FaTag } from 'react-icons/fa';
 
 interface Article {
   id: number;
@@ -658,14 +659,28 @@ export default function AdminArticlesPage() {
                   <td style={{ padding: '10px 8px' }}>
                     {article.tags && article.tags.length > 0 ? (
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                        {article.tags.map(tag => (
-                          <span key={tag.name} style={{ background: '#e3f2fd', color: '#1976d2', padding: '3px 12px', borderRadius: 12, fontSize: 13, fontWeight: 500 }}>{tag.name}</span>
-                        ))}
+                        {article.tags.map(tag => {
+                          let color = '#e0e7ff';
+                          let textColor = '#3730a3';
+                          let icon = <FaTag style={{ marginRight: 4, fontSize: 13 }} />;
+                          if (tag.name === 'Review') {
+                            color = '#fff7e6'; textColor = '#d97706'; icon = <FaStar style={{ color: '#f59e42', marginRight: 4, fontSize: 13 }} />;
+                          } else if (tag.name === 'Chính hãng') {
+                            color = '#e0f2fe'; textColor = '#0284c7'; icon = <FaShieldAlt style={{ color: '#38bdf8', marginRight: 4, fontSize: 13 }} />;
+                          } else if (tag.name === 'Ưu đãi') {
+                            color = '#fef9c3'; textColor = '#b45309'; icon = <FaGift style={{ color: '#fbbf24', marginRight: 4, fontSize: 13 }} />;
+                          }
+                          return (
+                            <span key={tag.name} style={{ background: color, color: textColor, padding: '4px 14px 4px 8px', borderRadius: 14, fontSize: 13, fontWeight: 500, display: 'inline-flex', alignItems: 'center', boxShadow: '0 1px 4px #eee' }}>
+                              {icon}{tag.name}
+                            </span>
+                          );
+                        })}
                       </div>
                     ) : <span style={{ color: '#aaa' }}>-</span>}
                   </td>
                   <td style={{ padding: '10px 8px', color: '#666', fontSize: 14 }}>{new Date(article.createdAt).toLocaleString('vi-VN')}</td>
-                  <td style={{ padding: '10px 8px', color: '#666', fontSize: 14 }}>{article.author?.email || '-'}</td>
+                  <td style={{ padding: '10px 8px', color: '#666', fontSize: 14 }}>{article.author?.email || 'Admin'}</td>
                   <td style={{ padding: '10px 8px', textAlign: 'center' }}>
                     <button
                       onClick={() => handleEditClick(article)}

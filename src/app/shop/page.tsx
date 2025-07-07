@@ -56,11 +56,6 @@ const fallbackProducts = [
 export const dynamic = 'force-dynamic';
 
 const productImages = [
-  '/images/1751357595794-camcam.jpg',
-  '/images/1751358606630-camcam.jpg',
-  '/mua-hang/body_lotion.png',
-  '/mua-hang/kem_duong_da_tay.png',
-  '/mua-hang/sua_rua_mat.png',
   '/images/body_lotion_lefoin.jpg',
   '/images/orange_farm_collection.jpg',
   '/images/cam_cam_orange_farm.jpg',

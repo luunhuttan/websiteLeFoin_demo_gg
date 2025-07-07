@@ -82,10 +82,10 @@ export default function NewArticlePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: formTitle,
-          excerpt: formExcerpt,
-          content: formContent,
-          image: formImage,
+          title_vi: formTitle.vi,
+          title_en: formTitle.en,
+          content_vi: formContent.vi,
+          content_en: formContent.en,
           tags: formTags,
         }),
       });

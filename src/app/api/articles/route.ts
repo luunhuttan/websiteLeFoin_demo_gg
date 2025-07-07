@@ -6,11 +6,11 @@ export async function POST(req: NextRequest) {
     console.log('POST /api/articles called');
     
     // Tạm thời bỏ qua middleware để test
-    const { title, content, tags } = await req.json();
-    console.log('Request body:', { title, content, tags });
+    const { title_vi, title_en, content_vi, content_en, tags } = await req.json();
+    console.log('Request body:', { title_vi, title_en, content_vi, content_en, tags });
     
-    if (!title || !content) {
-      return new Response(JSON.stringify({ error: 'Missing title or content' }), { status: 400 });
+    if (!title_vi || !title_en || !content_vi || !content_en) {
+      return new Response(JSON.stringify({ error: 'Missing title or content in one or both languages' }), { status: 400 });
     }
     
     // Đảm bảo tags luôn là mảng string
@@ -18,8 +18,12 @@ export async function POST(req: NextRequest) {
     // 1. Tạo bài viết trước
     const article = await prisma.article.create({
       data: {
-        title,
-        content,
+        title: title_vi,
+        content: content_vi,
+        title_vi,
+        title_en,
+        content_vi,
+        content_en,
         authorId: 1, // ID của admin user
       },
     });
@@ -41,7 +45,13 @@ export async function POST(req: NextRequest) {
     // 3. Lấy lại bài viết kèm tags
     const articleWithTags = await prisma.article.findUnique({
       where: { id: article.id },
-      include: {
+      select: {
+        id: true,
+        title_vi: true,
+        title_en: true,
+        content_vi: true,
+        content_en: true,
+        createdAt: true,
         articletag: { include: { tag: true } },
       },
     });
@@ -49,8 +59,10 @@ export async function POST(req: NextRequest) {
     const tagsMapped = (articleWithTags?.articletag || []).map((t: any) => ({ name: t.tag.name }));
     return new Response(JSON.stringify({
       id: articleWithTags?.id,
-      title: articleWithTags?.title,
-      content: articleWithTags?.content,
+      title_vi: articleWithTags?.title_vi,
+      title_en: articleWithTags?.title_en,
+      content_vi: articleWithTags?.content_vi,
+      content_en: articleWithTags?.content_en,
       createdAt: articleWithTags?.createdAt,
       tags: tagsMapped
     }), { status: 201 });

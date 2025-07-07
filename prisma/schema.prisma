@@ -8,17 +8,21 @@ datasource db {
 }
 
 model article {
-  id         Int          @id @default(autoincrement())
-  title      String
-  content    String       @db.Text
-  createdAt  DateTime     @default(now())
-  authorId   Int?
-  category   String       @default("Chưa phân loại")
-  user       user?        @relation(fields: [authorId], references: [id], map: "Article_authorId_fkey")
-  articletag articletag[]
-  favoritedBy user[] @relation("UserFavoriteArticles")
-  views      ArticleView[]
-  comments   Comment[]
+  id          Int           @id @default(autoincrement())
+  title       String
+  content     String        @db.Text
+  createdAt   DateTime      @default(now())
+  authorId    Int?
+  category    String        @default("Chưa phân loại")
+  content_en  String        @db.Text
+  content_vi  String        @db.Text
+  title_en    String
+  title_vi    String
+  views       ArticleView[]
+  comments    Comment[]
+  user        user?         @relation(fields: [authorId], references: [id], map: "Article_authorId_fkey")
+  articletag  articletag[]
+  favoritedBy user[]        @relation("UserFavoriteArticles")
 
   @@index([authorId], map: "Article_authorId_fkey")
 }
@@ -76,8 +80,8 @@ model product {
   inStock     Boolean     @default(true)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  orderitem   orderitem[]
   reviews     Review[]
+  orderitem   orderitem[]
 }
 
 model tag {
@@ -87,23 +91,23 @@ model tag {
 }
 
 model user {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique(map: "User_email_key")
-  password  String
-  role      String    @default("user")
-  firstName String?
-  lastName  String?
-  phone     String?
-  address   String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt @default(now())
-  avatar    String?
-  article   article[]
-  order     order[]
-  favoriteArticles article[] @relation("UserFavoriteArticles")
-  articleViews ArticleView[]
-  reviews   Review[]
-  comments  Comment[]
+  id               Int           @id @default(autoincrement())
+  email            String        @unique(map: "User_email_key")
+  password         String
+  role             String        @default("user")
+  firstName        String?
+  lastName         String?
+  phone            String?
+  address          String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
+  avatar           String?
+  articleViews     ArticleView[]
+  comments         Comment[]
+  reviews          Review[]
+  article          article[]
+  order            order[]
+  favoriteArticles article[]     @relation("UserFavoriteArticles")
 }
 
 model ArticleView {
@@ -111,8 +115,8 @@ model ArticleView {
   userId    Int
   articleId Int
   viewedAt  DateTime @default(now())
-  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
   article   article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, articleId])
   @@index([userId])
@@ -124,34 +128,33 @@ model Review {
   id        Int      @id @default(autoincrement())
   userId    Int
   productId Int
-  rating    Int      // 1-5 stars
+  rating    Int
   comment   String?  @db.Text
-  verified  Boolean  @default(false) // Verified purchase
+  verified  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, productId]) // One review per user per product
+  @@unique([userId, productId])
   @@index([productId])
   @@index([rating])
   @@index([createdAt])
 }
 
 model Comment {
-  id        Int       @id @default(autoincrement())
-  content   String    @db.Text
-  userId    Int
-  articleId Int
-  parentId  Int?      // For nested replies
-  isApproved Boolean  @default(false) // Admin approval
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  
-  user      user      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  article   article   @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies   Comment[] @relation("CommentReplies")
+  id         Int       @id @default(autoincrement())
+  content    String    @db.Text
+  userId     Int
+  articleId  Int
+  parentId   Int?
+  isApproved Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  article    article   @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    Comment[] @relation("CommentReplies")
+  user       user      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([articleId])
   @@index([userId])

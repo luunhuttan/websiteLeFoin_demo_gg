@@ -13,6 +13,13 @@ interface Article {
   createdAt: string;
   authorId?: number;
   tags?: any[];
+  title_vi?: string;
+  title_en?: string;
+  excerpt_vi?: string;
+  excerpt_en?: string;
+  content_vi?: string;
+  content_en?: string;
+  image?: string;
 }
 
 export default function ArticleDetailPage() {
@@ -82,14 +89,13 @@ export default function ArticleDetailPage() {
   if (loading) return <div style={{textAlign:'center',padding:40}}>Đang tải bài viết...</div>;
   if (error || !article) return <div style={{textAlign:'center',padding:40}}>{error || "Không tìm thấy bài viết."}</div>;
 
-  let content: any = {};
-  try {
-    content = JSON.parse(article.content);
-  } catch {}
-
-  // Lấy đúng trường theo locale, fallback sang 'vi' nếu không có
-  const lang = content[locale] ? locale : 'vi';
-  const art = content[lang] || {};
+  // Ưu tiên lấy trường content_vi, content_en, title_vi, title_en, image
+  const art = {
+    title: article.title_vi || article.title_en || article.title || '',
+    excerpt: article.excerpt_vi || article.excerpt_en || '',
+    content: article.content_vi || article.content_en || '',
+    image: article.image || '/images/og-lefoin.jpg',
+  };
 
   return (
     <motion.div
@@ -174,10 +180,10 @@ export default function ArticleDetailPage() {
           </button>
         </div>
       </div>
-      <img src={art.image || '/images/og-lefoin.jpg'} alt={art.title || article.title} className="w-full max-h-80 object-cover rounded-xl border border-gray-200 dark:border-gray-700 mb-8" />
-      <h1 className="text-4xl font-extrabold mb-4 text-gray-900 dark:text-white">{art.title || article.title}</h1>
+      <img src={art.image} alt={art.title} className="w-full max-h-80 object-cover rounded-xl border border-gray-200 dark:border-gray-700 mb-8" />
+      <h1 className="text-4xl font-extrabold mb-4 text-gray-900 dark:text-white">{art.title}</h1>
       <div className="text-lg mb-6 text-gray-500 dark:text-gray-400 font-medium">{art.excerpt}</div>
-      <div className="text-xl leading-8 text-gray-800 dark:text-gray-100 mb-10">{art.content}</div>
+      <div className="text-xl leading-8 text-gray-800 dark:text-gray-100 mb-10" dangerouslySetInnerHTML={{ __html: art.content }} />
       {/* Comment Section */}
       <CommentSection articleId={article.id} />
     </motion.div>

@@ -5,14 +5,21 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { title, content, tags } = await req.json();
-    if (!title || !content) {
-      return new Response(JSON.stringify({ error: 'Missing title or content' }), { status: 400 });
+    const { title_vi, title_en, content_vi, content_en, image, tags } = await req.json();
+    if (!title_vi || !title_en || !content_vi || !content_en || !image) {
+      return new Response(JSON.stringify({ error: 'Missing title, content, or image in one or both languages' }), { status: 400 });
     }
     const tagsArray = Array.isArray(tags) ? tags : (tags ? [tags] : []);
     const article = await prisma.article.update({
       where: { id: Number(params.id) },
-      data: { title, content },
+      data: {
+        title: title_vi,
+        title_vi,
+        title_en,
+        content_vi,
+        content_en,
+        image,
+      },
     });
     // Xóa hết tag cũ
     await prisma.articletag.deleteMany({ where: { articleId: article.id } });

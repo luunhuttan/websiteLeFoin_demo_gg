@@ -172,24 +172,15 @@ export default function AdminArticlesPage() {
     }
   };
 
-  const handleEditClick = (article: Article) => {
+  const handleEditClick = (article: any) => {
     setEditId(article.id);
-    try {
-      const content = JSON.parse(article.content);
-      setEditTitle({ vi: content.vi?.title || '', en: content.en?.title || '' });
-      setEditExcerpt({ vi: content.vi?.excerpt || '', en: content.en?.excerpt || '' });
-      setEditContent({ vi: content.vi?.content || '', en: content.en?.content || '' });
-      setEditImage(content.vi?.image || '');
-      if (article.tags && Array.isArray(article.tags)) {
-        setEditTags(article.tags.map((tag: any) => tag.name));
-      } else {
-        setEditTags([]);
-      }
-    } catch {
-      setEditTitle({ vi: '', en: '' });
-      setEditExcerpt({ vi: '', en: '' });
-      setEditContent({ vi: '', en: '' });
-      setEditImage('');
+    setEditTitle({ vi: article.title_vi || '', en: article.title_en || '' });
+    setEditExcerpt({ vi: article.excerpt_vi || '', en: article.excerpt_en || '' });
+    setEditContent({ vi: article.content_vi || '', en: article.content_en || '' });
+    setEditImage(article.image || '');
+    if (article.tags && Array.isArray(article.tags)) {
+      setEditTags(article.tags.map((tag: any) => tag.name));
+    } else {
       setEditTags([]);
     }
     setEditError("");
@@ -199,19 +190,14 @@ export default function AdminArticlesPage() {
     e.preventDefault();
     setEditLoading(true);
     setEditError("");
-    // Đảm bảo tags là mảng string
-    const tagsToSend = Array.isArray(editTags) ? editTags : (editTags ? [editTags] : []);
-    console.log('Submit edit article, tags:', tagsToSend);
-    const content = JSON.stringify({
-      vi: { title: editTitle.vi, excerpt: editExcerpt.vi, content: editContent.vi, image: editImage },
-      en: { title: editTitle.en, excerpt: editExcerpt.en, content: editContent.en, image: editImage }
-    });
-    if (!session.data || !session.data.user) {
-      setEditError("Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn.");
+    // Validate đủ 2 ngôn ngữ
+    if (!editTitle.vi.trim() || !editTitle.en.trim() || !editContent.vi.trim() || !editContent.en.trim()) {
+      setEditError("Vui lòng nhập đầy đủ tiêu đề và nội dung cho cả hai ngôn ngữ.");
       setEditLoading(false);
       return;
     }
-    const user = session.data.user;
+    const tagsToSend = Array.isArray(editTags) ? editTags : (editTags ? [editTags] : []);
+    const user = session.data?.user;
     const res = await fetch(`/api/articles/${editId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", "Authorization": `Bearer ${JSON.stringify(user)}` },

@@ -33,7 +33,9 @@ export async function POST(req: NextRequest) {
     if (result.secure_url) {
       return new Response(JSON.stringify({ url: result.secure_url }), { status: 200 });
     } else {
-      return new Response(JSON.stringify({ error: result.error?.message || 'Upload failed' }), { status: 500 });
+      // Log lỗi chi tiết ra console và trả về cho client
+      console.error('Cloudinary upload error:', result);
+      return new Response(JSON.stringify({ error: result.error?.message || 'Upload failed', detail: result }), { status: 500 });
     }
   } catch (err) {
     return new Response(JSON.stringify({ error: 'Upload failed' }), { status: 500 });

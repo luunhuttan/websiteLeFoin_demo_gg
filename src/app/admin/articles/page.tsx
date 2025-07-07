@@ -596,24 +596,32 @@ export default function AdminArticlesPage() {
 
       {/* Thêm UI filter tag và ô tìm kiếm phía trên danh sách bài viết */}
       <div style={{ display: 'flex', gap: 16, marginBottom: 24, alignItems: 'center', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {['Tất cả', ...allTags].map(tag => (
             <button
               key={tag}
               onClick={() => setSelectedTag(tag)}
               style={{
-                padding: '8px 22px',
-                borderRadius: 999,
-                border: '2px solid #2a7ae4',
-                background: selectedTag === tag ? '#2a7ae4' : '#fff',
+                padding: '10px 28px',
+                borderRadius: 10,
+                border: selectedTag === tag ? '2.5px solid #2a7ae4' : '2px solid #bdbdbd',
+                background: selectedTag === tag ? 'linear-gradient(90deg,#2a7ae4 60%,#4fc3f7 100%)' : '#fff',
                 color: selectedTag === tag ? '#fff' : '#2a7ae4',
                 fontWeight: 600,
-                fontSize: 15,
-                transition: 'all 0.2s',
+                fontSize: 16,
+                transition: 'all 0.18s',
                 cursor: 'pointer',
                 outline: 'none',
-                minWidth: 80
+                minWidth: 110,
+                boxShadow: selectedTag === tag ? '0 2px 8px #b3e5fc' : '0 1px 2px #eee',
+                marginBottom: 6,
+                marginRight: 0,
+                letterSpacing: '0.2px',
+                borderColor: selectedTag === tag ? '#2a7ae4' : '#bdbdbd',
+                boxSizing: 'border-box',
               }}
+              onMouseOver={e => { if (selectedTag !== tag) e.currentTarget.style.background = '#e3f2fd'; }}
+              onMouseOut={e => { if (selectedTag !== tag) e.currentTarget.style.background = '#fff'; }}
             >
               {tag}
             </button>

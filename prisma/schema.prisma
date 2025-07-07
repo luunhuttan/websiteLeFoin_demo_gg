@@ -18,6 +18,7 @@ model article {
   content_vi  String        @db.Text
   title_en    String
   title_vi    String
+  image       String?
   views       ArticleView[]
   comments    Comment[]
   user        user?         @relation(fields: [authorId], references: [id], map: "Article_authorId_fkey")

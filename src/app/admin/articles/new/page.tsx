@@ -47,8 +47,13 @@ export default function NewArticlePage() {
       alert('File quá lớn. Vui lòng chọn file nhỏ hơn 5MB.');
       return;
     }
-    if (!file.type.startsWith('image/')) {
-      alert('Vui lòng chọn file ảnh hợp lệ.');
+    // Cho phép mọi loại file ảnh phổ biến
+    const allowedTypes = [
+      'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp',
+      'image/svg+xml', 'image/tiff', 'image/x-icon', 'image/avif', 'image/heic', 'image/heif', 'image/jpg'
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Vui lòng chọn file ảnh hợp lệ (jpg, jpeg, png, webp, gif, bmp, svg, tiff, ico, avif, heic, heif).');
       return;
     }
     setFormImageUploading(true);
@@ -86,6 +91,7 @@ export default function NewArticlePage() {
           title_en: formTitle.en,
           content_vi: formContent.vi,
           content_en: formContent.en,
+          image: formImage,
           tags: formTags,
         }),
       });

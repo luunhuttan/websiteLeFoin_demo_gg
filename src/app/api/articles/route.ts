@@ -6,11 +6,11 @@ export async function POST(req: NextRequest) {
     console.log('POST /api/articles called');
     
     // Tạm thời bỏ qua middleware để test
-    const { title_vi, title_en, content_vi, content_en, tags } = await req.json();
-    console.log('Request body:', { title_vi, title_en, content_vi, content_en, tags });
+    const { title_vi, title_en, content_vi, content_en, image, tags } = await req.json();
+    console.log('Request body:', { title_vi, title_en, content_vi, content_en, image, tags });
     
-    if (!title_vi || !title_en || !content_vi || !content_en) {
-      return new Response(JSON.stringify({ error: 'Missing title or content in one or both languages' }), { status: 400 });
+    if (!title_vi || !title_en || !content_vi || !content_en || !image) {
+      return new Response(JSON.stringify({ error: 'Missing title, content, or image in one or both languages' }), { status: 400 });
     }
     
     // Đảm bảo tags luôn là mảng string
@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
         title_en,
         content_vi,
         content_en,
+        image,
         authorId: 1, // ID của admin user
       },
     });
@@ -51,6 +52,7 @@ export async function POST(req: NextRequest) {
         title_en: true,
         content_vi: true,
         content_en: true,
+        image: true,
         createdAt: true,
         articletag: { include: { tag: true } },
       },
@@ -63,6 +65,7 @@ export async function POST(req: NextRequest) {
       title_en: articleWithTags?.title_en,
       content_vi: articleWithTags?.content_vi,
       content_en: articleWithTags?.content_en,
+      image: articleWithTags?.image,
       createdAt: articleWithTags?.createdAt,
       tags: tagsMapped
     }), { status: 201 });

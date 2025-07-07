@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -19,6 +19,20 @@ interface Article {
 }
 
 export const dynamic = 'force-dynamic';
+
+function Toast({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) {
+  return (
+    <div style={{
+      position: 'fixed', bottom: 32, right: 32, zIndex: 9999,
+      background: type === 'success' ? '#4caf50' : '#e53935', color: '#fff',
+      padding: '16px 32px', borderRadius: 12, fontWeight: 600, fontSize: 16,
+      boxShadow: '0 2px 12px #0002', minWidth: 220, display: 'flex', alignItems: 'center', gap: 12
+    }}>
+      {type === 'success' ? '✔️' : '❌'} {message}
+      <button onClick={onClose} style={{ marginLeft: 16, background: 'none', border: 'none', color: '#fff', fontWeight: 700, fontSize: 18, cursor: 'pointer' }}>×</button>
+    </div>
+  );
+}
 
 export default function AdminArticlesPage() {
   const session = useSession();
@@ -51,6 +65,9 @@ export default function AdminArticlesPage() {
   const [editTagInput, setEditTagInput] = useState("");
   const [selectedTag, setSelectedTag] = useState<string>('Tất cả');
   const [searchTitle, setSearchTitle] = useState<string>('');
+  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+  const [unsaved, setUnsaved] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
   // Kiểm tra quyền admin
@@ -269,6 +286,25 @@ export default function AdminArticlesPage() {
     return matchTag && matchTitle;
   });
 
+  const tabBtnStyle = (active: boolean) => ({
+    fontWeight: active ? 700 : 400,
+    background: active ? 'linear-gradient(90deg,#2a7ae4 60%,#4fc3f7 100%)' : '#f5f7fa',
+    color: active ? '#fff' : '#2a7ae4',
+    border: 'none', borderRadius: 10, padding: '8px 28px', cursor: 'pointer', fontSize: 17,
+    boxShadow: active ? '0 2px 8px #b3e5fc' : '0 1px 2px #eee', transition: 'all 0.18s',
+  });
+
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (unsaved) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [unsaved]);
+
   if (session.status === "loading") {
     return (
       <div style={{ 
@@ -326,10 +362,10 @@ export default function AdminArticlesPage() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleAddArticle} style={{ marginBottom: 32, background: '#f9f9f9', borderRadius: 8, padding: 24 }}>
+        <form onSubmit={handleAddArticle} ref={formRef} style={{ marginBottom: 32, background: '#f9f9f9', borderRadius: 8, padding: 24 }}>
           <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-            <button type="button" onClick={() => setActiveLang('vi')} style={{ fontWeight: activeLang === 'vi' ? 700 : 400, background: activeLang === 'vi' ? '#2a7ae4' : '#eee', color: activeLang === 'vi' ? '#fff' : '#333', border: 'none', borderRadius: 6, padding: '6px 18px', cursor: 'pointer' }}>Tiếng Việt</button>
-            <button type="button" onClick={() => setActiveLang('en')} style={{ fontWeight: activeLang === 'en' ? 700 : 400, background: activeLang === 'en' ? '#2a7ae4' : '#eee', color: activeLang === 'en' ? '#fff' : '#333', border: 'none', borderRadius: 6, padding: '6px 18px', cursor: 'pointer' }}>English</button>
+            <button type="button" onClick={() => setActiveLang('vi')} style={tabBtnStyle(activeLang === 'vi')} disabled={activeLang === 'vi'}>Tiếng Việt</button>
+            <button type="button" onClick={() => setActiveLang('en')} style={tabBtnStyle(activeLang === 'en')} disabled={activeLang === 'en'}>English</button>
           </div>
           <div style={{ marginBottom: 12 }}>
             <input
@@ -348,13 +384,28 @@ export default function AdminArticlesPage() {
               required
               style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ccc', marginBottom: 8 }}
             />
-            <textarea
-              placeholder={activeLang === 'vi' ? 'Nội dung (Tiếng Việt)' : 'Content (English)'}
-              value={formContent[activeLang]}
-              onChange={e => setFormContent({ ...formContent, [activeLang]: e.target.value })}
-              required
-              style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ccc', minHeight: 80 }}
-            />
+            <div style={{ marginBottom: 8 }}>
+              <ReactQuill
+                value={formContent[activeLang]}
+                onChange={(val: string) => setFormContent({ ...formContent, [activeLang]: val })}
+                theme="snow"
+                placeholder={activeLang === 'vi' ? 'Nội dung (Tiếng Việt)' : 'Content (English)'}
+                style={{ minHeight: 180, marginBottom: 8 }}
+                modules={{
+                  toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'align': [] }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'image'],
+                    ['clean']
+                  ]
+                }}
+              />
+            </div>
           </div>
           <div style={{ marginBottom: 12 }}>
             <label style={{ fontWeight: 500, marginRight: 8 }}>Ảnh đại diện:</label>
@@ -467,8 +518,8 @@ export default function AdminArticlesPage() {
           border: "1px solid #ffeaa7"
         }}>
           <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-            <button type="button" onClick={() => setEditActiveLang('vi')} style={{ fontWeight: editActiveLang === 'vi' ? 700 : 400, background: editActiveLang === 'vi' ? '#2a7ae4' : '#eee', color: editActiveLang === 'vi' ? '#fff' : '#333', border: 'none', borderRadius: 6, padding: '6px 18px', cursor: 'pointer' }}>Tiếng Việt</button>
-            <button type="button" onClick={() => setEditActiveLang('en')} style={{ fontWeight: editActiveLang === 'en' ? 700 : 400, background: editActiveLang === 'en' ? '#2a7ae4' : '#eee', color: editActiveLang === 'en' ? '#fff' : '#333', border: 'none', borderRadius: 6, padding: '6px 18px', cursor: 'pointer' }}>English</button>
+            <button type="button" onClick={() => setEditActiveLang('vi')} style={tabBtnStyle(editActiveLang === 'vi')} disabled={editActiveLang === 'vi'}>Tiếng Việt</button>
+            <button type="button" onClick={() => setEditActiveLang('en')} style={tabBtnStyle(editActiveLang === 'en')} disabled={editActiveLang === 'en'}>English</button>
           </div>
           <div style={{ marginBottom: 12 }}>
             <input
@@ -745,6 +796,10 @@ export default function AdminArticlesPage() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
     </div>
   );

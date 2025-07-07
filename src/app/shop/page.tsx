@@ -91,9 +91,13 @@ export default function ShopPage() {
           href="https://shopee.vn/le.foin.original.official"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-xl font-bold rounded-full shadow-lg transition-colors duration-200"
+          className="inline-flex items-center gap-3 px-10 py-5 bg-[#ff5722] hover:bg-[#ff3d00] text-white text-2xl font-extrabold rounded-full shadow-2xl border-4 border-white dark:border-gray-800 transition-all duration-200 drop-shadow-lg focus:ring-4 focus:ring-orange-300 focus:outline-none"
         >
-          <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10zm0 18c-4.411 0-8-3.589-8-8 0-4.411 3.589-8 8-8s8 3.589 8 8c0 4.411-3.589 8-8 8zm2-13h-4v2h4V7zm-1 4h-2v6h2v-6z"/></svg>
+          <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="12" fill="#fff"/>
+            <path d="M24 14c-5.523 0-10 3.134-10 7v7c0 3.866 4.477 7 10 7s10-3.134 10-7v-7c0-3.866-4.477-7-10-7Zm0 2c4.418 0 8 2.239 8 5v2h-16v-2c0-2.761 3.582-5 8-5Zm-8 7h16v5c0 2.761-3.582 5-8 5s-8-2.239-8-5v-5Z" fill="#ff5722"/>
+            <circle cx="24" cy="24" r="23" stroke="#ff5722" strokeWidth="2"/>
+          </svg>
           Xem sản phẩm tại Shopee
         </a>
       </div>

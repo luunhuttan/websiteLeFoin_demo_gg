@@ -1,100 +1,58 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const articlesData = [
-  {
-    titleVi: 'Handcream Cam Cam - Dưỡng ẩm tự nhiên',
-    titleEn: 'Handcream Cam Cam - Natural Moisturizer',
-    excerptVi: 'Khám phá sản phẩm dưỡng ẩm chiết xuất cam tự nhiên, an toàn cho mọi loại da.',
-    excerptEn: 'Discover the natural orange extract moisturizer, safe for all skin types.',
-    image: '/images/handcream Cam Cam.png',
-    categoryVi: 'Sản phẩm',
-    categoryEn: 'Products',
-  },
-  {
-    titleVi: 'Orange Farm - Trang trại cam sạch',
-    titleEn: 'Orange Farm - Clean Orange Farm',
-    excerptVi: 'Câu chuyện về trang trại cam hữu cơ và hành trình mang đến trái cam sạch cho mọi nhà.',
-    excerptEn: 'The story of the organic orange farm and the journey to bring clean oranges to every home.',
-    image: '/images/orange_farm background thơ mộng.jpg',
-    categoryVi: 'Câu chuyện',
-    categoryEn: 'Stories',
-  },
-  {
-    titleVi: 'Làm việc hiệu quả với hương cam',
-    titleEn: 'Work Effectively with Orange Scent',
-    excerptVi: 'Hương cam giúp tinh thần sảng khoái, tăng hiệu suất làm việc mỗi ngày.',
-    excerptEn: 'Orange scent refreshes your mind and boosts daily work performance.',
-    image: '/images/handcream background làm việc.jpg',
-    categoryVi: 'Sống xanh',
-    categoryEn: 'Green Living',
-  },
-  {
-    titleVi: 'Dầu olive và sức khỏe',
-    titleEn: 'Olive Oil and Health',
-    excerptVi: 'Khám phá lợi ích tuyệt vời của dầu olive nguyên chất cho sức khỏe và sắc đẹp.',
-    excerptEn: 'Discover the amazing benefits of pure olive oil for health and beauty.',
-    image: '/images/handcream nước.png',
-    categoryVi: 'Sản phẩm',
-    categoryEn: 'Products',
-  },
-  {
-    titleVi: 'Rơm rạ trong nông nghiệp hữu cơ',
-    titleEn: 'Straw in Organic Agriculture',
-    excerptVi: 'Vai trò của rơm rạ trong canh tác bền vững và bảo vệ môi trường.',
-    excerptEn: 'The role of straw in sustainable farming and environmental protection.',
-    image: '/images/orange_farm trên kệ.jpg',
-    categoryVi: 'Câu chuyện',
-    categoryEn: 'Stories',
-  },
-  {
-    titleVi: 'Tinh chất cam sành dưỡng da',
-    titleEn: 'Orange Essence for Skin Care',
-    excerptVi: 'Tinh chất cam sành giúp dưỡng sáng da, chống oxy hóa tự nhiên.',
-    excerptEn: 'Orange essence helps brighten skin and provides natural antioxidants.',
-    image: '/images/handcream background cam sành.png',
-    categoryVi: 'Sản phẩm',
-    categoryEn: 'Products',
-  },
-  {
-    titleVi: 'Sống xanh cùng Le Foin',
-    titleEn: 'Green Living with Le Foin',
-    excerptVi: 'Những thói quen nhỏ giúp bạn sống xanh, bảo vệ môi trường mỗi ngày.',
-    excerptEn: 'Small habits to help you live green and protect the environment every day.',
-    image: '/images/handcream_camcam background chill.jpg',
-    categoryVi: 'Sống xanh',
-    categoryEn: 'Green Living',
-  },
+const tagsPool = [
+  'Làm đẹp', 'Chăm sóc da', 'Review', 'Thiên nhiên', 'Sức khỏe', 'Ưu đãi', 'Hướng dẫn', 'Mẹo hay', 'Sản phẩm mới', 'Chính hãng'
 ];
 
-async function importArticles() {
-  try {
-    const admin = await prisma.user.findFirst({ where: { email: 'admin@lefoin.com' } });
-    if (!admin) {
-      console.error('Admin user not found!');
-      process.exit(1);
-    }
-    for (const art of articlesData) {
-      // Gộp title, excerpt, category thành 1 chuỗi JSON để lưu vào content
-      const content = JSON.stringify({
-        vi: { excerpt: art.excerptVi, category: art.categoryVi, image: art.image },
-        en: { excerpt: art.excerptEn, category: art.categoryEn, image: art.image }
-      });
-      await prisma.article.create({
+const longContent = `
+Le Foin là thương hiệu mỹ phẩm thiên nhiên nổi bật với các sản phẩm an toàn cho làn da Việt. Chúng tôi cam kết mang đến chất lượng vượt trội, nguồn gốc rõ ràng và dịch vụ tận tâm.\n\nBài viết này sẽ phân tích chi tiết về các thành phần tự nhiên trong sản phẩm, lợi ích khi sử dụng lâu dài và những phản hồi tích cực từ khách hàng.\n\n1. Thành phần thiên nhiên\n2. Quy trình sản xuất hiện đại\n3. Cam kết chất lượng\n4. Ưu đãi hấp dẫn\n5. Hướng dẫn sử dụng hiệu quả\n\nHãy cùng khám phá lý do vì sao Le Foin được hàng ngàn khách hàng tin dùng!\n\n... (bài viết dài mẫu) ...`;
+
+const shortContent = `
+Le Foin - Mỹ phẩm thiên nhiên an toàn, chất lượng cho làn da Việt. Đặt hàng ngay tại Shopee để nhận ưu đãi!\n\n... (bài viết ngắn mẫu) ...`;
+
+async function main() {
+  for (let i = 1; i <= 10; i++) {
+    const isLong = i <= 5;
+    const titleVi = isLong ? `Bài báo dài mẫu số ${i}` : `Bài báo ngắn mẫu số ${i-5}`;
+    const titleEn = isLong ? `Sample Long Article ${i}` : `Sample Short Article ${i-5}`;
+    const contentVi = isLong ? longContent : shortContent;
+    const contentEn = isLong ? longContent : shortContent;
+    const image = 'https://lefoin.vn/images/og-lefoin.jpg';
+    // Random 2-3 tags
+    const shuffled = tagsPool.sort(() => 0.5 - Math.random());
+    const tags = shuffled.slice(0, Math.floor(Math.random() * 2) + 2);
+
+    // Tạo bài viết
+    const article = await prisma.article.create({
+      data: {
+        title: titleVi,
+        content: contentVi,
+        title_vi: titleVi,
+        title_en: titleEn,
+        content_vi: contentVi,
+        content_en: contentEn,
+        image,
+        authorId: 1,
+      },
+    });
+
+    // Gán tag
+    for (const tagName of tags) {
+      let tag = await prisma.tag.findUnique({ where: { name: tagName } });
+      if (!tag) {
+        tag = await prisma.tag.create({ data: { name: tagName } });
+      }
+      await prisma.articletag.create({
         data: {
-          title: art.titleVi + ' / ' + art.titleEn,
-          content,
-          authorId: admin.id,
-        }
+          articleId: article.id,
+          tagId: tag.id,
+        },
       });
-      console.log('Imported:', art.titleVi);
     }
-    console.log('All articles imported!');
-  } catch (e) {
-    console.error('Error importing articles:', e);
-  } finally {
-    await prisma.$disconnect();
+    console.log(`Đã tạo bài viết mẫu: ${titleVi}`);
   }
+  await prisma.$disconnect();
 }
 
-importArticles(); 
+main().catch(e => { console.error(e); process.exit(1); }); 

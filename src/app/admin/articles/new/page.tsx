@@ -1,6 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function NewArticlePage() {
   const [activeLang, setActiveLang] = useState<'vi' | 'en'>('vi');
@@ -128,13 +131,28 @@ export default function NewArticlePage() {
             required
             style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ccc', marginBottom: 8 }}
           />
-          <textarea
-            placeholder={activeLang === 'vi' ? 'Nội dung (Tiếng Việt)' : 'Content (English)'}
-            value={formContent[activeLang]}
-            onChange={e => setFormContent({ ...formContent, [activeLang]: e.target.value })}
-            required
-            style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ccc', minHeight: 80 }}
-          />
+          <div style={{ marginBottom: 8 }}>
+            <ReactQuill
+              value={formContent[activeLang]}
+              onChange={val => setFormContent({ ...formContent, [activeLang]: val })}
+              theme="snow"
+              placeholder={activeLang === 'vi' ? 'Nội dung (Tiếng Việt)' : 'Content (English)'}
+              style={{ minHeight: 180, marginBottom: 8 }}
+              modules={{
+                toolbar: [
+                  [{ 'header': [1, 2, 3, false] }],
+                  ['bold', 'italic', 'underline', 'strike'],
+                  [{ 'color': [] }, { 'background': [] }],
+                  [{ 'align': [] }],
+                  [{ 'size': ['small', false, 'large', 'huge'] }],
+                  ['blockquote', 'code-block'],
+                  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                  ['link', 'image'],
+                  ['clean']
+                ]
+              }}
+            />
+          </div>
         </div>
         <div style={{ marginBottom: 12 }}>
           <label style={{ fontWeight: 500, marginRight: 8 }}>Ảnh đại diện:</label>

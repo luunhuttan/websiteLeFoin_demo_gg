@@ -6,6 +6,7 @@ import { LanguageProvider } from "@/components/LanguageProvider";
 import Footer from "@/components/layout/Footer";
 import DynamicHtmlLang from "@/components/DynamicHtmlLang";
 import SessionProvider from "@/components/SessionProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata = {
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               </div>
             </DarkModeProvider>
           </LanguageProvider>
+          <SpeedInsights />
         </SessionProvider>
       </body>
     </html>

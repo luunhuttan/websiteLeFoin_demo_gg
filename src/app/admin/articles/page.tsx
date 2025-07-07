@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { FaStar, FaShieldAlt, FaGift, FaTag } from 'react-icons/fa';
-import dynamic from 'next/dynamic';
+import dynamicImport from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+const ReactQuill = dynamicImport(() => import('react-quill'), { ssr: false });
 
 interface Article {
   id: number;

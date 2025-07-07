@@ -61,6 +61,11 @@ const productImages = [
   '/mua-hang/body_lotion.png',
   '/mua-hang/kem_duong_da_tay.png',
   '/mua-hang/sua_rua_mat.png',
+  '/images/body_lotion_lefoin.jpg',
+  '/images/orange_farm_collection.jpg',
+  '/images/cam_cam_orange_farm.jpg',
+  '/images/facewash_lefoin.jpg',
+  '/images/forest_after_rain.jpg',
 ];
 
 export default function ShopPage() {
@@ -99,6 +104,7 @@ export default function ShopPage() {
             <circle cx="24" cy="24" r="23" stroke="#ff5722" strokeWidth="2"/>
           </svg>
           Xem sản phẩm tại Shopee
+          <span className="ml-2 text-lg font-semibold bg-white/20 px-4 py-1 rounded-full border border-white/40">Click here!</span>
         </a>
       </div>
 

@@ -209,6 +209,13 @@ export function Header() {
         <div className="md:hidden border-t border-water bg-water/95 dark:bg-gray-900/95 relative animate-slide-down">
           <div className="header-gradient w-full h-full absolute inset-0 pointer-events-none"></div>
           <nav className="container py-4 relative flex flex-col gap-2">
+            {/* Nút đăng nhập/đăng ký nổi bật trên mobile nếu chưa đăng nhập */}
+            {!user && (
+              <div className="flex flex-col gap-3 mb-3">
+                <a href="/login" className="w-full text-center py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-400 shadow hover:from-blue-700 hover:to-blue-500 text-lg">Đăng nhập</a>
+                <a href="/register" className="w-full text-center py-3 rounded-xl font-bold text-white bg-gradient-to-r from-amber-500 to-yellow-400 shadow hover:from-amber-600 hover:to-yellow-500 text-lg">Đăng ký</a>
+              </div>
+            )}
             {navigation.map((item) => (
               <Link
                 key={item.href}

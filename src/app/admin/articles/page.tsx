@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { FaStar, FaShieldAlt, FaGift, FaTag } from 'react-icons/fa';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 interface Article {
   id: number;
@@ -128,7 +131,14 @@ export default function AdminArticlesPage() {
     const res = await fetch("/api/articles", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: formTitle.vi, content, tags: tagsToSend })
+      body: JSON.stringify({
+        title_vi: formTitle.vi,
+        title_en: formTitle.en,
+        content_vi: formContent.vi,
+        content_en: formContent.en,
+        image: formImage,
+        tags: tagsToSend,
+      })
     });
     if (res.ok) {
       setShowForm(false);
@@ -205,7 +215,14 @@ export default function AdminArticlesPage() {
     const res = await fetch(`/api/articles/${editId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", "Authorization": `Bearer ${JSON.stringify(user)}` },
-      body: JSON.stringify({ title: editTitle.vi, content, tags: tagsToSend })
+      body: JSON.stringify({
+        title_vi: editTitle.vi,
+        title_en: editTitle.en,
+        content_vi: editContent.vi,
+        content_en: editContent.en,
+        image: editImage,
+        tags: tagsToSend,
+      })
     });
     if (res.ok) {
       setEditId(null);
@@ -484,13 +501,28 @@ export default function AdminArticlesPage() {
               required
               style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ccc', marginBottom: 8 }}
             />
-            <textarea
-              placeholder={editActiveLang === 'vi' ? 'Nội dung (Tiếng Việt)' : 'Content (English)'}
-              value={editContent[editActiveLang]}
-              onChange={e => setEditContent({ ...editContent, [editActiveLang]: e.target.value })}
-              required
-              style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ccc', minHeight: 80 }}
-            />
+            <div style={{ marginBottom: 8 }}>
+              <ReactQuill
+                value={editContent[editActiveLang]}
+                onChange={(val: string) => setEditContent({ ...editContent, [editActiveLang]: val })}
+                theme="snow"
+                placeholder={editActiveLang === 'vi' ? 'Nội dung (Tiếng Việt)' : 'Content (English)'}
+                style={{ minHeight: 180, marginBottom: 8 }}
+                modules={{
+                  toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'align': [] }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'image'],
+                    ['clean']
+                  ]
+                }}
+              />
+            </div>
           </div>
           <div style={{ marginBottom: 12 }}>
             <label style={{ fontWeight: 500, marginRight: 8 }}>Ảnh đại diện:</label>

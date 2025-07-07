@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function NewArticlePage() {
   const [activeLang, setActiveLang] = useState<'vi' | 'en'>('vi');
@@ -11,6 +12,7 @@ export default function NewArticlePage() {
   const [formTags, setFormTags] = useState<string[]>([]);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     // Giả lập fetch tags từ API
@@ -64,10 +66,41 @@ export default function NewArticlePage() {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Validate dữ liệu
+    if (!formTitle.vi.trim() || !formTitle.en.trim() || !formContent.vi.trim() || !formContent.en.trim()) {
+      alert("Vui lòng nhập đầy đủ tiêu đề và nội dung cho cả hai ngôn ngữ.");
+      return;
+    }
+    if (!formImage) {
+      alert("Vui lòng upload ảnh đại diện cho bài viết.");
+      return;
+    }
+    try {
+      const res = await fetch("/api/articles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: formTitle,
+          excerpt: formExcerpt,
+          content: formContent,
+          image: formImage,
+          tags: formTags,
+        }),
+      });
+      if (!res.ok) throw new Error("Đăng bài thất bại");
+      alert("Đăng bài thành công!");
+      router.push("/");
+    } catch (error) {
+      alert("Có lỗi xảy ra khi đăng bài. Vui lòng thử lại.");
+    }
+  };
+
   return (
     <div style={{ maxWidth: 700, margin: '40px auto', background: '#fff', padding: 32, borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24 }}>Thêm bài viết mới</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
           <button type="button" onClick={() => setActiveLang('vi')} style={{ fontWeight: activeLang === 'vi' ? 700 : 400, background: activeLang === 'vi' ? '#2a7ae4' : '#eee', color: activeLang === 'vi' ? '#fff' : '#333', border: 'none', borderRadius: 6, padding: '6px 18px', cursor: 'pointer' }}>Tiếng Việt</button>
           <button type="button" onClick={() => setActiveLang('en')} style={{ fontWeight: activeLang === 'en' ? 700 : 400, background: activeLang === 'en' ? '#2a7ae4' : '#eee', color: activeLang === 'en' ? '#fff' : '#333', border: 'none', borderRadius: 6, padding: '6px 18px', cursor: 'pointer' }}>English</button>

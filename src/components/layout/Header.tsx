@@ -101,69 +101,75 @@ export function Header() {
             />
           </Link>
         </div>
+        {/* Nút đổi ngôn ngữ và darkmode ngoài header ngang */}
+        <div className="flex items-center gap-2">
+          <div className="rounded-full bg-[#23272f] p-2 flex items-center justify-center"><LanguageSwitcher /></div>
+          <div className="rounded-full bg-[#23272f] p-2 flex items-center justify-center"><DarkModeButton /></div>
+        </div>
         {/* Ẩn toàn bộ menu ngang, avatar, nút phụ trên desktop */}
       </div>
       {/* Sidebar/drawer menu trái */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[9999] flex">
+        <div className="fixed inset-0 z-[9999] flex h-full min-h-screen">
           {/* Overlay */}
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>
-          {/* Sidebar */}
-          <aside className="w-80 max-w-full h-full bg-white dark:bg-gray-900 shadow-2xl flex flex-col p-0 animate-slide-left relative">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-gray-800">
+          <div className="fixed inset-0 bg-black/40 transition-opacity h-full min-h-screen animate-fade-in" onClick={() => setIsMobileMenuOpen(false)}></div>
+          {/* Sidebar modern style */}
+          <aside className="fixed left-0 top-0 h-full min-h-screen w-60 max-w-full bg-[#181A20] text-gray-100 flex flex-col p-0 select-none z-[10000] overflow-x-hidden rounded-r-2xl shadow-2xl transition-transform duration-300 ease-in-out animate-slide-in-left">
+            {/* Logo + Close */}
+            <div className="flex items-center h-16 px-4 border-b border-gray-800 flex-shrink-0">
               <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-                <Image src={dark ? "/images/logo-lefoin-darkmode.png" : "/images/logo-lefoin.png"} alt="LeFoin Logo" width={100} height={32} className="h-8 w-auto" />
+                <Image src={"/images/logo-lefoin-darkmode.png"} alt="LeFoin Logo" width={90} height={28} className="h-7 w-auto" />
               </Link>
-              <button className="p-2" onClick={() => setIsMobileMenuOpen(false)} aria-label="Đóng menu">
-                <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button className="ml-auto p-2 text-gray-400 hover:text-red-500" onClick={() => setIsMobileMenuOpen(false)} aria-label="Đóng menu">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            {/* User info hoặc đăng nhập/đăng ký */}
-            <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800 flex flex-col items-center gap-2">
-              {!user ? (
-                <>
-                  <a href="/login" className="w-full text-center py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-400 shadow hover:from-blue-700 hover:to-blue-500 text-lg mb-2 flex items-center justify-center gap-2"><FaSignInAlt /> Đăng nhập</a>
-                  <a href="/register" className="w-full text-center py-3 rounded-xl font-bold text-white bg-gradient-to-r from-amber-500 to-yellow-400 shadow hover:from-amber-600 hover:to-yellow-500 text-lg flex items-center justify-center gap-2"><FaUser /> Đăng ký</a>
-                </>
-              ) : (
-                <>
-                  <img src={avatarUrl} alt="avatar" className="w-14 h-14 rounded-full object-cover border-2 border-amber mb-1" />
-                  <div className="font-bold text-leaf dark:text-amber text-lg">{user.firstName || user.email}</div>
-                  <div className="text-gray-500 dark:text-gray-400 text-sm mb-2">{user.email}</div>
-                  <button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-red-500 text-white font-semibold flex items-center gap-2"><FaSignOutAlt /> Đăng xuất</button>
-                </>
-              )}
-            </div>
             {/* Menu chính */}
-            <nav className="flex flex-col gap-1 px-2 py-4 flex-1 overflow-y-auto">
-              {navigation.map((item) => (
+            <nav className="flex-1 overflow-y-auto overflow-x-hidden px-0 py-1 flex flex-col gap-0">
+              {[navigation[0], navigation[2], navigation[1], navigation[3], navigation[4]].map((item, idx) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-5 py-3 rounded-lg font-semibold text-base transition-all ${pathname === item.href ? "bg-amber text-white" : "text-leaf hover:bg-amber/10 hover:text-amber"}`}
+                  className={`flex items-center gap-2 px-3 py-0.5 rounded-lg font-medium text-[15px] transition-all duration-150 ${pathname === item.href ? "bg-[#23272f] text-amber-400 font-bold" : "hover:bg-[#23272f] hover:text-amber-400 group"}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <span className="text-xl w-7 flex-shrink-0 flex items-center justify-center">{item.icon}</span>
+                  <span className={`text-xl w-7 flex-shrink-0 flex items-center justify-center transition-all duration-150 ${pathname === item.href ? "text-amber-500" : "text-gray-300 group-hover:text-amber-400"}`}>{item.icon}</span>
                   {item.name}
                 </Link>
               ))}
+              {/* Quản lý (admin) */}
               {user?.role === 'admin' && (
                 <Link
                   href="/admin/articles"
-                  className="flex items-center gap-3 px-5 py-3 rounded-lg font-semibold text-base bg-amber/10 text-amber"
+                  className="flex items-center gap-4 px-6 py-2 rounded-lg font-medium text-base bg-[#23272f] text-amber-400 font-bold mt-1"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <span className="text-xl w-7 flex-shrink-0 flex items-center justify-center"><FaUserCog /></span>
+                  <span className="text-xl w-7 flex-shrink-0 flex items-center justify-center text-amber-500">{<FaUserCog />}</span>
                   Quản lý
                 </Link>
               )}
             </nav>
-            {/* Đổi theme/ngôn ngữ */}
-            <div className="flex gap-3 justify-center px-6 py-4 border-t border-gray-200 dark:border-gray-800">
-              <LanguageSwitcher />
-              <DarkModeButton />
+            {/* Phần chức năng cuối sidebar */}
+            <div className="flex flex-col gap-0 px-3 py-2 border-t border-gray-700 flex-shrink-0 bg-[#181A20] mt-1">
+              {user ? (
+                <>
+                  <div className="flex items-center gap-3 mb-2">
+                    <img src={avatarUrl} alt="avatar" className="w-8 h-8 rounded-full object-cover border border-amber" />
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-amber-400 text-base truncate">{user.firstName || user.email}</div>
+                      <div className="text-gray-400 text-xs truncate">{user.email}</div>
+                    </div>
+                  </div>
+                  <button onClick={handleLogout} className="flex items-center gap-3 w-full px-0 py-3 rounded-lg font-medium text-base hover:bg-[#23272f] hover:text-red-400 text-red-400 transition-all mb-2"><FaSignOutAlt />Đăng xuất</button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="flex items-center gap-2 w-full px-0 py-2 rounded-lg font-medium text-[15px] hover:bg-[#23272f] hover:text-amber-400 transition-all mb-0.5"><FaSignInAlt />Đăng nhập</Link>
+                  <Link href="/register" className="flex items-center gap-2 w-full px-0 py-2 rounded-lg font-medium text-[15px] hover:bg-[#23272f] hover:text-amber-400 transition-all"><FaUser />Đăng ký</Link>
+                </>
+              )}
             </div>
           </aside>
         </div>

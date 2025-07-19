@@ -129,11 +129,8 @@ export function Header() {
   if (!mounted) return null;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-water shadow-md bg-white/90 dark:bg-gray-900/90 backdrop-blur">
-      <div className="header-gradient w-full h-full absolute inset-0 pointer-events-none"></div>
-      <div ref={overlayRef} className={`header-fade-overlay ${dark ? "dark" : "light"}`}></div>
-      
-      <div className="container container-header flex h-16 items-center justify-between relative px-4 md:px-6 lg:px-8">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 border-b border-amber-200 dark:border-gray-700 shadow-lg backdrop-blur-sm">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image 
@@ -148,56 +145,66 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation Menu */}
-        <nav className="hidden lg:flex items-center space-x-2">
+        <nav className="hidden lg:flex items-center space-x-3">
           {navigation.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`relative px-5 py-2.5 rounded-lg font-semibold text-base transition-all duration-200 group ${
+              className={`relative px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300 group ${
                 pathname === item.href 
-                  ? "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-600 shadow-sm" 
-                  : "bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-700 dark:hover:text-amber-300 border border-transparent hover:border-amber-200"
+                  ? "bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-lg transform scale-105" 
+                  : "bg-white/70 dark:bg-gray-800/70 text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-amber-100 hover:to-orange-100 dark:hover:from-amber-900/20 dark:hover:to-orange-900/20 hover:text-amber-700 dark:hover:text-amber-300 hover:shadow-md hover:transform hover:scale-105 border border-transparent hover:border-amber-300"
               }`}
             >
-              <span className="flex items-center gap-2.5">
-                <span className={`text-lg transition-colors duration-200 ${pathname === item.href ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-400 group-hover:text-amber-600"}`}>
+              <span className="flex items-center gap-3">
+                <span className={`text-xl transition-all duration-300 ${pathname === item.href ? "text-white" : "text-amber-500 dark:text-amber-400 group-hover:text-amber-600"}`}>
                   {item.icon}
                 </span>
-                <span className="font-medium">{item.name}</span>
+                <span className="font-bold">{item.name}</span>
               </span>
               {/* Active indicator */}
               {pathname === item.href && (
-                <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1.5 h-0.5 bg-amber-500 dark:bg-amber-400 rounded-full"></span>
+                <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white rounded-full shadow-sm"></span>
               )}
             </Link>
           ))}
         </nav>
 
         {/* Right side controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
+          {/* Language Switcher */}
+          <div className="hidden md:flex items-center gap-2">
+            <LanguageSwitcher />
+          </div>
+
+          {/* Theme Toggle */}
+          <div className="hidden md:block">
+            <DarkModeButton />
+          </div>
+
           {/* User menu for desktop */}
           {user ? (
             <div className="hidden md:block relative" ref={userMenuRef}>
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg"
               >
-                <UserAvatar user={user} />
-                <span className="font-medium text-sm text-gray-700 dark:text-gray-200">
+                <UserAvatar user={user} size="w-8 h-8" />
+                <span className="font-semibold text-sm text-gray-700 dark:text-gray-200">
                   {user.firstName || user.email?.split('@')[0]}
                 </span>
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               
               {isUserMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
-                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center gap-3">
-                      <UserAvatar user={user} size="w-10 h-10" />
+                <div className="absolute right-0 top-full mt-3 w-72 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 py-3 z-50">
+                  <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center gap-4">
+                      <UserAvatar user={user} size="w-12 h-12" />
                       <div>
-                        <div className="font-semibold text-gray-900 dark:text-gray-100">
+                        <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">
                           {user.firstName || user.email?.split('@')[0]}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -208,22 +215,22 @@ export function Header() {
                   </div>
                   
                   <div className="py-2">
-                    <Link href="/user/profile" className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                      <FaUser className="text-lg" />
-                      Hồ sơ
+                    <Link href="/user/profile" className="flex items-center gap-4 px-6 py-3 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-colors">
+                      <FaUser className="text-xl text-amber-500" />
+                      <span className="font-semibold">Hồ sơ</span>
                     </Link>
-                    <Link href="/user/favorites" className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                      <FaHeart className="text-lg" />
-                      Yêu thích
+                    <Link href="/user/favorites" className="flex items-center gap-4 px-6 py-3 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-colors">
+                      <FaHeart className="text-xl text-amber-500" />
+                      <span className="font-semibold">Yêu thích</span>
                     </Link>
-                    <Link href="/user/history" className="flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                      <FaHistory className="text-lg" />
-                      Lịch sử
+                    <Link href="/user/history" className="flex items-center gap-4 px-6 py-3 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-colors">
+                      <FaHistory className="text-xl text-amber-500" />
+                      <span className="font-semibold">Lịch sử</span>
                     </Link>
                     {user.role === 'admin' && (
-                      <Link href="/admin" className="flex items-center gap-3 px-4 py-2 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-colors">
-                        <FaUserCog className="text-lg" />
-                        Quản trị
+                      <Link href="/admin" className="flex items-center gap-4 px-6 py-3 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-colors">
+                        <FaUserCog className="text-xl" />
+                        <span className="font-semibold">Quản trị</span>
                       </Link>
                     )}
                   </div>
@@ -231,49 +238,42 @@ export function Header() {
                   <div className="border-t border-gray-200 dark:border-gray-700 pt-2">
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-3 w-full px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+                      className="flex items-center gap-4 w-full px-6 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
                     >
-                      <FaSignOutAlt className="text-lg" />
-                      Đăng xuất
+                      <FaSignOutAlt className="text-xl" />
+                      <span className="font-semibold">Đăng xuất</span>
                     </button>
                   </div>
                 </div>
               )}
             </div>
           ) : (
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-3">
               <Link
                 href="/login"
-                className="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors"
+                className="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-semibold transition-colors"
               >
                 Đăng nhập
               </Link>
               <Link
                 href="/register"
-                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium transition-colors shadow-sm"
+                className="px-6 py-2 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl font-bold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
               >
                 Đăng ký
               </Link>
             </div>
           )}
 
-          {/* Language Switcher */}
-          <div className="hidden sm:block">
-            <LanguageSwitcher />
-          </div>
-
-          {/* Dark Mode Toggle */}
-          <div className="hidden sm:block">
-            <DarkModeButton />
-          </div>
-
           {/* Mobile menu button */}
           <button
-            className="lg:hidden p-2 text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-lg transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle mobile menu"
+            className="lg:hidden p-2 rounded-lg bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 transition-colors"
           >
-            {isMobileMenuOpen ? <FaTimes className="w-6 h-6" /> : <FaBars className="w-6 h-6" />}
+            {isMobileMenuOpen ? (
+              <FaTimes className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+            ) : (
+              <FaBars className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+            )}
           </button>
         </div>
       </div>
@@ -290,10 +290,10 @@ export function Header() {
           {/* Mobile menu panel */}
           <div 
             ref={mobileMenuRef}
-            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out"
+            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between p-6 border-b border-amber-200 dark:border-gray-700">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                 <Image 
                   src={dark ? "/images/logo-lefoin-darkmode.png" : "/images/logo-lefoin.png"}
@@ -305,7 +305,7 @@ export function Header() {
               </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors"
               >
                 <FaTimes className="w-5 h-5" />
               </button>
@@ -313,34 +313,34 @@ export function Header() {
 
             {/* Navigation */}
             <nav className="flex-1 overflow-y-auto py-6">
-              <div className="px-6 space-y-2">
+              <div className="px-6 space-y-3">
                 {navigation.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-base transition-colors ${
+                    className={`flex items-center gap-4 px-6 py-4 rounded-xl font-bold text-base transition-all duration-300 ${
                       pathname === item.href
-                        ? "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-600"
-                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        ? "bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-lg transform scale-105"
+                        : "bg-white/70 dark:bg-gray-800/70 text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-amber-100 hover:to-orange-100 dark:hover:from-amber-900/20 dark:hover:to-orange-900/20 hover:text-amber-700 dark:hover:text-amber-300 hover:shadow-md hover:transform hover:scale-105"
                     }`}
                   >
-                    <span className={`text-lg transition-colors ${pathname === item.href ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-400"}`}>
+                    <span className={`text-xl transition-all duration-300 ${pathname === item.href ? "text-white" : "text-amber-500 dark:text-amber-400"}`}>
                       {item.icon}
                     </span>
-                    {item.name}
+                    <span className="font-bold">{item.name}</span>
                   </Link>
                 ))}
               </div>
 
               {/* User section */}
-              <div className="px-6 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="px-6 mt-8 pt-6 border-t border-amber-200 dark:border-gray-700">
                 {user ? (
                   <div className="space-y-4">
-                    <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="flex items-center gap-4 p-6 bg-white/70 dark:bg-gray-800/70 rounded-xl shadow-md">
                       <UserAvatar user={user} size="w-12 h-12" />
                       <div>
-                        <div className="font-semibold text-gray-900 dark:text-gray-100">
+                        <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">
                           {user.firstName || user.email?.split('@')[0]}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -349,62 +349,62 @@ export function Header() {
                       </div>
                     </div>
                     
-                    <div className="space-y-2">
-                      <Link href="/user/profile" className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors font-medium">
-                        <FaUser className="text-lg" />
-                        Hồ sơ
+                    <div className="space-y-3">
+                      <Link href="/user/profile" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
+                        <FaUser className="text-xl text-amber-500" />
+                        <span className="font-semibold">Hồ sơ</span>
                       </Link>
-                      <Link href="/user/favorites" className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors font-medium">
-                        <FaHeart className="text-lg" />
-                        Yêu thích
+                      <Link href="/user/favorites" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
+                        <FaHeart className="text-xl text-amber-500" />
+                        <span className="font-semibold">Yêu thích</span>
                       </Link>
-                      <Link href="/user/history" className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors font-medium">
-                        <FaHistory className="text-lg" />
-                        Lịch sử
+                      <Link href="/user/history" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
+                        <FaHistory className="text-xl text-amber-500" />
+                        <span className="font-semibold">Lịch sử</span>
                       </Link>
                       {user.role === 'admin' && (
-                        <Link href="/admin" className="flex items-center gap-3 px-4 py-3 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-lg transition-colors font-medium">
-                          <FaUserCog className="text-lg" />
-                          Quản trị
+                        <Link href="/admin" className="flex items-center gap-4 px-6 py-4 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
+                          <FaUserCog className="text-xl" />
+                          <span className="font-semibold">Quản trị</span>
                         </Link>
                       )}
                     </div>
                     
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-3 w-full px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors font-medium"
+                      className="flex items-center gap-4 w-full px-6 py-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-colors font-semibold"
                     >
-                      <FaSignOutAlt className="text-lg" />
-                      Đăng xuất
+                      <FaSignOutAlt className="text-xl" />
+                      <span className="font-semibold">Đăng xuất</span>
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <Link
                       href="/login"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                      className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold"
                     >
-                      <FaSignInAlt className="text-lg" />
-                      Đăng nhập
+                      <FaSignInAlt className="text-xl text-amber-500" />
+                      <span className="font-semibold">Đăng nhập</span>
                     </Link>
                     <Link
                       href="/register"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors"
+                      className="flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl transition-all duration-300 font-bold shadow-md hover:shadow-lg transform hover:scale-105"
                     >
-                      <FaUser className="text-lg" />
-                      Đăng ký
+                      <FaUser className="text-xl" />
+                      <span className="font-bold">Đăng ký</span>
                     </Link>
                   </div>
                 )}
               </div>
 
               {/* Settings */}
-              <div className="px-6 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="px-6 mt-6 pt-6 border-t border-amber-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Cài đặt</span>
-                  <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-gray-700 dark:text-gray-200">Cài đặt</span>
+                  <div className="flex items-center gap-3">
                     <LanguageSwitcher />
                     <DarkModeButton />
                   </div>

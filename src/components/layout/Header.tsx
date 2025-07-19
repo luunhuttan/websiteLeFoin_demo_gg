@@ -101,8 +101,23 @@ export function Header() {
 
   const handleMobileMenuToggle = () => {
     console.log('Mobile menu toggle clicked, current state:', isMobileMenuOpen);
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    const newState = !isMobileMenuOpen;
+    setIsMobileMenuOpen(newState);
+    
+    // Prevent body scroll when mobile menu is open
+    if (newState) {
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      document.body.classList.remove('mobile-menu-open');
+    }
   };
+
+  // Clean up body class when component unmounts
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, []);
 
   // Avatar component với fallback tốt hơn
   const UserAvatar = ({ user, size = "w-8 h-8" }: { user: any, size?: string }) => {
@@ -272,7 +287,7 @@ export function Header() {
           {/* Mobile menu button */}
           <button
             onClick={handleMobileMenuToggle}
-            className="lg:hidden p-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-md transition-colors"
+            className="lg:hidden p-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-md transition-colors mobile-menu-button"
             aria-label="Toggle mobile menu"
           >
             {isMobileMenuOpen ? (
@@ -286,20 +301,21 @@ export function Header() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-[9999]">
+        <div className="lg:hidden fixed inset-0 z-[99999] mobile-menu-overlay">
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99999]"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           
           {/* Mobile menu panel */}
           <div 
             ref={mobileMenuRef}
-            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden z-[10000]"
+            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden z-[100000] mobile-menu-panel"
+            style={{ zIndex: 100000 }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-amber-200 dark:border-gray-700">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                 <Image 
                   src={dark ? "/images/logo-lefoin-darkmode.png" : "/images/logo-lefoin.png"}
@@ -311,7 +327,7 @@ export function Header() {
               </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors"
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 <FaTimes className="w-5 h-5" />
               </button>
@@ -340,10 +356,10 @@ export function Header() {
               </div>
 
               {/* User section */}
-              <div className="px-6 mt-8 pt-6 border-t border-amber-200 dark:border-gray-700">
+              <div className="px-6 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                 {user ? (
                   <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-6 bg-white/70 dark:bg-gray-800/70 rounded-xl shadow-md">
+                    <div className="flex items-center gap-4 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
                       <UserAvatar user={user} size="w-12 h-12" />
                       <div className="min-w-0 flex-1">
                         <div className="font-bold text-gray-900 dark:text-gray-100 text-lg truncate">
@@ -407,7 +423,7 @@ export function Header() {
               </div>
 
               {/* Settings */}
-              <div className="px-6 mt-6 pt-6 border-t border-amber-200 dark:border-gray-700">
+              <div className="px-6 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-gray-700 dark:text-gray-200">Cài đặt</span>
                   <div className="flex items-center gap-3">

@@ -3201,3 +3201,23 @@ html {
 .about-hero-logo-img.dark-logo, .about-footer-logo-img.dark-logo { display: none; }
 body.dark .about-hero-logo-img.light-logo, body.dark .about-footer-logo-img.light-logo { display: none; }
 body.dark .about-hero-logo-img.dark-logo, body.dark .about-footer-logo-img.dark-logo { display: inline; }
+
+/* Mobile menu z-index fix */
+.mobile-menu-overlay {
+  z-index: 99999 !important;
+}
+
+.mobile-menu-panel {
+  z-index: 100000 !important;
+}
+
+/* Ensure mobile menu button is visible */
+.mobile-menu-button {
+  z-index: 1000;
+  position: relative;
+}
+
+/* Prevent body scroll when mobile menu is open */
+body.mobile-menu-open {
+  overflow: hidden;
+}

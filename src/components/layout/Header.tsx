@@ -150,7 +150,7 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className={`relative px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 group ${
+              className={`relative px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 group whitespace-nowrap ${
                 pathname === item.href 
                   ? "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-600 shadow-sm" 
                   : "bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-700 dark:hover:text-amber-300 border border-transparent hover:border-amber-200"
@@ -160,7 +160,7 @@ export function Header() {
                 <span className={`text-base transition-colors duration-200 ${pathname === item.href ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-400 group-hover:text-amber-600"}`}>
                   {item.icon}
                 </span>
-                <span className="font-medium">{item.name}</span>
+                <span className="font-medium whitespace-nowrap">{item.name}</span>
               </span>
               {/* Active indicator */}
               {pathname === item.href && (
@@ -251,13 +251,13 @@ export function Header() {
             <div className="hidden md:flex items-center gap-3">
               <Link
                 href="/login"
-                className="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-semibold transition-colors"
+                className="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-400 font-semibold transition-colors whitespace-nowrap"
               >
                 Đăng nhập
               </Link>
               <Link
                 href="/register"
-                className="px-6 py-2 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl font-bold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                className="px-6 py-2 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl font-bold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 whitespace-nowrap"
               >
                 Đăng ký
               </Link>
@@ -319,7 +319,7 @@ export function Header() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-base transition-colors ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-base transition-colors whitespace-nowrap ${
                       pathname === item.href
                         ? "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-600"
                         : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -328,7 +328,7 @@ export function Header() {
                     <span className={`text-lg transition-colors ${pathname === item.href ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-400"}`}>
                       {item.icon}
                     </span>
-                    {item.name}
+                    <span className="whitespace-nowrap">{item.name}</span>
                   </Link>
                 ))}
               </div>

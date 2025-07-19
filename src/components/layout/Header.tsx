@@ -309,7 +309,7 @@ export function Header() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-[99999] mobile-menu-overlay mobile-menu-debug">
+        <div className="lg:hidden fixed inset-0 z-[99999] mobile-menu-overlay">
           {/* Backdrop */}
           <div 
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99999]"
@@ -319,16 +319,11 @@ export function Header() {
           {/* Mobile menu panel */}
           <div 
             ref={mobileMenuRef}
-            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden z-[100000] mobile-menu-panel mobile-menu-debug"
+            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-white to-amber-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden z-[100000] mobile-menu-panel"
             style={{ zIndex: 100000 }}
           >
-            {/* Debug header */}
-            <div className="bg-red-500 text-white p-4 text-center font-bold">
-              MOBILE MENU IS OPEN - DEBUG MODE
-            </div>
-            
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between p-6 border-b border-amber-200 dark:border-gray-700 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-700">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                 <Image 
                   src={dark ? "/images/logo-lefoin-darkmode.png" : "/images/logo-lefoin.png"}
@@ -340,7 +335,7 @@ export function Header() {
               </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors"
               >
                 <FaTimes className="w-5 h-5" />
               </button>
@@ -354,25 +349,25 @@ export function Header() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-base transition-colors whitespace-nowrap ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-base transition-all duration-200 whitespace-nowrap ${
                       pathname === item.href
-                        ? "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-600"
-                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        ? "bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-600 shadow-sm"
+                        : "text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-900/10 dark:hover:to-orange-900/10 hover:text-amber-700 dark:hover:text-amber-300"
                     }`}
                   >
                     <span className={`text-lg transition-colors flex-shrink-0 ${pathname === item.href ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-400"}`}>
                       {item.icon}
                     </span>
-                    <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</span>
+                    <span className="whitespace-nowrap overflow-hidden text-ellipsis font-semibold">{item.name}</span>
                   </Link>
                 ))}
               </div>
 
               {/* User section */}
-              <div className="px-6 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="px-6 mt-8 pt-6 border-t border-amber-200 dark:border-gray-700">
                 {user ? (
                   <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                    <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm">
                       <UserAvatar user={user} size="w-12 h-12" />
                       <div className="min-w-0 flex-1">
                         <div className="font-bold text-gray-900 dark:text-gray-100 text-lg truncate">
@@ -385,20 +380,20 @@ export function Header() {
                     </div>
                     
                     <div className="space-y-3">
-                      <Link href="/user/profile" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
+                      <Link href="/user/profile" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-900/10 dark:hover:to-orange-900/10 rounded-xl transition-all duration-200 font-semibold">
                         <FaUser className="text-xl text-amber-500 flex-shrink-0" />
                         <span className="font-semibold truncate">Hồ sơ</span>
                       </Link>
-                      <Link href="/user/favorites" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
+                      <Link href="/user/favorites" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-900/10 dark:hover:to-orange-900/10 rounded-xl transition-all duration-200 font-semibold">
                         <FaHeart className="text-xl text-amber-500 flex-shrink-0" />
                         <span className="font-semibold truncate">Yêu thích</span>
                       </Link>
-                      <Link href="/user/history" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
+                      <Link href="/user/history" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-900/10 dark:hover:to-orange-900/10 rounded-xl transition-all duration-200 font-semibold">
                         <FaHistory className="text-xl text-amber-500 flex-shrink-0" />
                         <span className="font-semibold truncate">Lịch sử</span>
                       </Link>
                       {user.role === 'admin' && (
-                        <Link href="/admin" className="flex items-center gap-4 px-6 py-4 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
+                        <Link href="/admin" className="flex items-center gap-4 px-6 py-4 text-amber-600 dark:text-amber-400 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-900/10 dark:hover:to-orange-900/10 rounded-xl transition-all duration-200 font-semibold">
                           <FaUserCog className="text-xl flex-shrink-0" />
                           <span className="font-semibold truncate">Quản trị</span>
                         </Link>
@@ -407,7 +402,7 @@ export function Header() {
                     
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-4 w-full px-6 py-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-colors font-semibold"
+                      className="flex items-center gap-4 w-full px-6 py-4 text-red-600 dark:text-red-400 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 dark:hover:from-red-900/10 dark:hover:to-pink-900/10 rounded-xl transition-all duration-200 font-semibold"
                     >
                       <FaSignOutAlt className="text-xl flex-shrink-0" />
                       <span className="font-semibold truncate">Đăng xuất</span>
@@ -418,7 +413,7 @@ export function Header() {
                     <Link
                       href="/login"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold"
+                      className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-900/10 dark:hover:to-orange-900/10 rounded-xl transition-all duration-200 font-semibold"
                     >
                       <FaSignInAlt className="text-xl text-amber-500 flex-shrink-0" />
                       <span className="font-semibold truncate">Đăng nhập</span>
@@ -436,7 +431,7 @@ export function Header() {
               </div>
 
               {/* Settings */}
-              <div className="px-6 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="px-6 mt-6 pt-6 border-t border-amber-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-gray-700 dark:text-gray-200">Cài đặt</span>
                   <div className="flex items-center gap-3">

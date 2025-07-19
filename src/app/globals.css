@@ -3250,11 +3250,4 @@ body.mobile-menu-open {
   width: 100% !important;
 }
 
-/* Debug styles to make sure mobile menu is visible */
-.mobile-menu-debug {
-  border: 3px solid red !important;
-  background-color: yellow !important;
-  color: black !important;
-  font-size: 20px !important;
-  font-weight: bold !important;
-}
+

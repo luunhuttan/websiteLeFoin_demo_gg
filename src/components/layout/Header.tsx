@@ -290,7 +290,7 @@ export function Header() {
           {/* Mobile menu panel */}
           <div 
             ref={mobileMenuRef}
-            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out"
+            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-amber-200 dark:border-gray-700">
@@ -325,10 +325,10 @@ export function Header() {
                         : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                     }`}
                   >
-                    <span className={`text-lg transition-colors ${pathname === item.href ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-400"}`}>
+                    <span className={`text-lg transition-colors flex-shrink-0 ${pathname === item.href ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-400"}`}>
                       {item.icon}
                     </span>
-                    <span className="whitespace-nowrap">{item.name}</span>
+                    <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</span>
                   </Link>
                 ))}
               </div>
@@ -339,11 +339,11 @@ export function Header() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-4 p-6 bg-white/70 dark:bg-gray-800/70 rounded-xl shadow-md">
                       <UserAvatar user={user} size="w-12 h-12" />
-                      <div>
-                        <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">
+                      <div className="min-w-0 flex-1">
+                        <div className="font-bold text-gray-900 dark:text-gray-100 text-lg truncate">
                           {user.firstName || user.email?.split('@')[0]}
                         </div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
                           {user.email}
                         </div>
                       </div>
@@ -351,21 +351,21 @@ export function Header() {
                     
                     <div className="space-y-3">
                       <Link href="/user/profile" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
-                        <FaUser className="text-xl text-amber-500" />
-                        <span className="font-semibold">Hồ sơ</span>
+                        <FaUser className="text-xl text-amber-500 flex-shrink-0" />
+                        <span className="font-semibold truncate">Hồ sơ</span>
                       </Link>
                       <Link href="/user/favorites" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
-                        <FaHeart className="text-xl text-amber-500" />
-                        <span className="font-semibold">Yêu thích</span>
+                        <FaHeart className="text-xl text-amber-500 flex-shrink-0" />
+                        <span className="font-semibold truncate">Yêu thích</span>
                       </Link>
                       <Link href="/user/history" className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
-                        <FaHistory className="text-xl text-amber-500" />
-                        <span className="font-semibold">Lịch sử</span>
+                        <FaHistory className="text-xl text-amber-500 flex-shrink-0" />
+                        <span className="font-semibold truncate">Lịch sử</span>
                       </Link>
                       {user.role === 'admin' && (
                         <Link href="/admin" className="flex items-center gap-4 px-6 py-4 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold">
-                          <FaUserCog className="text-xl" />
-                          <span className="font-semibold">Quản trị</span>
+                          <FaUserCog className="text-xl flex-shrink-0" />
+                          <span className="font-semibold truncate">Quản trị</span>
                         </Link>
                       )}
                     </div>
@@ -374,8 +374,8 @@ export function Header() {
                       onClick={handleLogout}
                       className="flex items-center gap-4 w-full px-6 py-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-colors font-semibold"
                     >
-                      <FaSignOutAlt className="text-xl" />
-                      <span className="font-semibold">Đăng xuất</span>
+                      <FaSignOutAlt className="text-xl flex-shrink-0" />
+                      <span className="font-semibold truncate">Đăng xuất</span>
                     </button>
                   </div>
                 ) : (
@@ -385,16 +385,16 @@ export function Header() {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="flex items-center gap-4 px-6 py-4 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/10 rounded-xl transition-colors font-semibold"
                     >
-                      <FaSignInAlt className="text-xl text-amber-500" />
-                      <span className="font-semibold">Đăng nhập</span>
+                      <FaSignInAlt className="text-xl text-amber-500 flex-shrink-0" />
+                      <span className="font-semibold truncate">Đăng nhập</span>
                     </Link>
                     <Link
                       href="/register"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl transition-all duration-300 font-bold shadow-md hover:shadow-lg transform hover:scale-105"
                     >
-                      <FaUser className="text-xl" />
-                      <span className="font-bold">Đăng ký</span>
+                      <FaUser className="text-xl flex-shrink-0" />
+                      <span className="font-bold truncate">Đăng ký</span>
                     </Link>
                   </div>
                 )}

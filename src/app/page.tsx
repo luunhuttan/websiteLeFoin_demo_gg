@@ -222,7 +222,13 @@ function HomePageContent() {
       <section className="articles" ref={articlesSectionRef}>
         <h2>{t("home.featured.title")}</h2>
         <div style={{
-          textAlign: 'center', marginBottom: 32, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8
+          textAlign: 'center', 
+          marginBottom: 32, 
+          display: 'flex', 
+          flexWrap: 'wrap', 
+          justifyContent: 'center', 
+          gap: 8,
+          padding: '0 16px'
         }}>
           {Array.isArray(tags) && tags.map((tag, idx) => (
             <button
@@ -232,19 +238,24 @@ function HomePageContent() {
               title={tag === 'Tất cả' ? 'Xem tất cả bài viết' : `Xem các bài viết với tag " ${tag} "`}
               style={{
                 margin: 0,
-                padding: '8px 20px',
+                padding: '10px 16px',
                 borderRadius: 20,
                 border: tag === 'Tất cả' ? 'none' : selectedTag === tag ? 'none' : '1.5px solid #2a7ae4',
                 background: selectedTag === tag ? '#2a7ae4' : tag === 'Tất cả' ? '#1976d2' : '#fff',
                 color: selectedTag === tag || tag === 'Tất cả' ? '#fff' : '#2a7ae4',
                 fontWeight: 600,
-                fontSize: '1rem',
+                fontSize: '14px',
                 boxShadow: selectedTag === tag ? '0 2px 8px rgba(42,122,228,0.10)' : 'none',
                 cursor: 'pointer',
                 transition: 'all 0.18s',
-                minWidth: 80,
+                minWidth: 'auto',
+                maxWidth: '100%',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
                 outline: selectedTag === tag ? '2px solid #1565c0' : 'none',
                 position: 'relative',
+                zIndex: 1
               }}
               onMouseOver={e => e.currentTarget.style.background = selectedTag === tag ? '#1565c0' : '#e3f2fd'}
               onMouseOut={e => e.currentTarget.style.background = selectedTag === tag ? '#2a7ae4' : tag === 'Tất cả' ? '#1976d2' : '#fff'}
@@ -253,7 +264,12 @@ function HomePageContent() {
             </button>
           ))}
         </div>
-        <div className="articles-list">
+        <div className="articles-list" style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '24px',
+          padding: '0 16px'
+        }}>
           {Array.isArray(paginatedArticles) && paginatedArticles.map((art) => (
             <div className="article-card" key={art.id} style={{
               borderRadius: 18,
@@ -264,7 +280,7 @@ function HomePageContent() {
               display: 'flex',
               flexDirection: 'column',
               minHeight: 380,
-              marginBottom: 24
+              marginBottom: 0
             }}>
               {/* Ảnh bài viết */}
               <div style={{ position: 'relative', width: '100%', height: 180, borderTopLeftRadius: 18, borderTopRightRadius: 18, overflow: 'hidden' }}>
@@ -292,20 +308,48 @@ function HomePageContent() {
                     fontSize: 13,
                     fontWeight: 500,
                     marginBottom: 8,
-                    alignSelf: 'flex-start'
+                    alignSelf: 'flex-start',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '100%'
                   }}>
                     {art.tagObjs[0].name}
                   </span>
                 )}
                 {/* Tiêu đề */}
                 <h3
-                  style={{ fontWeight: 700, fontSize: 18, margin: '8px 0 4px 0', color: '#2056c9', cursor: 'pointer' }}
+                  style={{ 
+                    fontWeight: 700, 
+                    fontSize: 18, 
+                    margin: '8px 0 4px 0', 
+                    color: '#2056c9', 
+                    cursor: 'pointer',
+                    lineHeight: 1.3,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical'
+                  }}
                   onClick={() => window.location.href = `/articles/${art.id}`}
                 >
                   {art.content?.[locale]?.title || art.title}
                 </h3>
                 {/* Mô tả ngắn */}
-                <div style={{ color: '#555', marginBottom: 16, flex: 1 }}>{art.content?.[locale]?.excerpt}</div>
+                <div style={{ 
+                  color: '#555', 
+                  marginBottom: 16, 
+                  flex: 1,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: 'vertical',
+                  lineHeight: 1.4
+                }}>
+                  {art.content?.[locale]?.excerpt}
+                </div>
                 {/* Nút Đọc tiếp */}
                 <button
                   onClick={() => window.location.href = `/articles/${art.id}`}
@@ -317,7 +361,8 @@ function HomePageContent() {
                     padding: '8px 20px',
                     fontWeight: 600,
                     cursor: 'pointer',
-                    alignSelf: 'flex-start'
+                    alignSelf: 'flex-start',
+                    whiteSpace: 'nowrap'
                   }}
                 >
                   Đọc tiếp &rarr;

@@ -102,15 +102,23 @@ export function Header() {
   const handleMobileMenuToggle = () => {
     console.log('Mobile menu toggle clicked, current state:', isMobileMenuOpen);
     const newState = !isMobileMenuOpen;
+    console.log('Setting mobile menu to:', newState);
     setIsMobileMenuOpen(newState);
     
     // Prevent body scroll when mobile menu is open
     if (newState) {
       document.body.classList.add('mobile-menu-open');
+      console.log('Added mobile-menu-open class to body');
     } else {
       document.body.classList.remove('mobile-menu-open');
+      console.log('Removed mobile-menu-open class from body');
     }
   };
+
+  // Debug mobile menu state
+  useEffect(() => {
+    console.log('Mobile menu state changed to:', isMobileMenuOpen);
+  }, [isMobileMenuOpen]);
 
   // Clean up body class when component unmounts
   useEffect(() => {
@@ -301,7 +309,7 @@ export function Header() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-[99999] mobile-menu-overlay">
+        <div className="lg:hidden fixed inset-0 z-[99999] mobile-menu-overlay mobile-menu-debug">
           {/* Backdrop */}
           <div 
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99999]"
@@ -311,9 +319,14 @@ export function Header() {
           {/* Mobile menu panel */}
           <div 
             ref={mobileMenuRef}
-            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden z-[100000] mobile-menu-panel"
+            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden z-[100000] mobile-menu-panel mobile-menu-debug"
             style={{ zIndex: 100000 }}
           >
+            {/* Debug header */}
+            <div className="bg-red-500 text-white p-4 text-center font-bold">
+              MOBILE MENU IS OPEN - DEBUG MODE
+            </div>
+            
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>

@@ -129,7 +129,7 @@ export function Header() {
   if (!mounted) return null;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 border-b border-amber-200 dark:border-gray-700 shadow-lg backdrop-blur-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-900/90 border-b border-gray-200 dark:border-gray-700 shadow-md backdrop-blur-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -145,26 +145,26 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation Menu */}
-        <nav className="hidden lg:flex items-center space-x-3">
+        <nav className="hidden lg:flex items-center space-x-2">
           {navigation.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`relative px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300 group ${
+              className={`relative px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 group ${
                 pathname === item.href 
-                  ? "bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-lg transform scale-105" 
-                  : "bg-white/70 dark:bg-gray-800/70 text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-amber-100 hover:to-orange-100 dark:hover:from-amber-900/20 dark:hover:to-orange-900/20 hover:text-amber-700 dark:hover:text-amber-300 hover:shadow-md hover:transform hover:scale-105 border border-transparent hover:border-amber-300"
+                  ? "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-600 shadow-sm" 
+                  : "bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-200 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-700 dark:hover:text-amber-300 border border-transparent hover:border-amber-200"
               }`}
             >
-              <span className="flex items-center gap-3">
-                <span className={`text-xl transition-all duration-300 ${pathname === item.href ? "text-white" : "text-amber-500 dark:text-amber-400 group-hover:text-amber-600"}`}>
+              <span className="flex items-center gap-2">
+                <span className={`text-base transition-colors duration-200 ${pathname === item.href ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-400 group-hover:text-amber-600"}`}>
                   {item.icon}
                 </span>
-                <span className="font-bold">{item.name}</span>
+                <span className="font-medium">{item.name}</span>
               </span>
               {/* Active indicator */}
               {pathname === item.href && (
-                <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-white rounded-full shadow-sm"></span>
+                <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1.5 h-0.5 bg-amber-500 dark:bg-amber-400 rounded-full"></span>
               )}
             </Link>
           ))}
@@ -313,22 +313,22 @@ export function Header() {
 
             {/* Navigation */}
             <nav className="flex-1 overflow-y-auto py-6">
-              <div className="px-6 space-y-3">
+              <div className="px-6 space-y-2">
                 {navigation.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-4 px-6 py-4 rounded-xl font-bold text-base transition-all duration-300 ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-base transition-colors ${
                       pathname === item.href
-                        ? "bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-lg transform scale-105"
-                        : "bg-white/70 dark:bg-gray-800/70 text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-amber-100 hover:to-orange-100 dark:hover:from-amber-900/20 dark:hover:to-orange-900/20 hover:text-amber-700 dark:hover:text-amber-300 hover:shadow-md hover:transform hover:scale-105"
+                        ? "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-600"
+                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                     }`}
                   >
-                    <span className={`text-xl transition-all duration-300 ${pathname === item.href ? "text-white" : "text-amber-500 dark:text-amber-400"}`}>
+                    <span className={`text-lg transition-colors ${pathname === item.href ? "text-amber-600 dark:text-amber-400" : "text-amber-500 dark:text-amber-400"}`}>
                       {item.icon}
                     </span>
-                    <span className="font-bold">{item.name}</span>
+                    {item.name}
                   </Link>
                 ))}
               </div>

@@ -99,6 +99,11 @@ export function Header() {
     window.location.href = "/";
   };
 
+  const handleMobileMenuToggle = () => {
+    console.log('Mobile menu toggle clicked, current state:', isMobileMenuOpen);
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   // Avatar component với fallback tốt hơn
   const UserAvatar = ({ user, size = "w-8 h-8" }: { user: any, size?: string }) => {
     const avatarSrc = user?.avatar || user?.image;
@@ -266,13 +271,14 @@ export function Header() {
 
           {/* Mobile menu button */}
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 transition-colors"
+            onClick={handleMobileMenuToggle}
+            className="lg:hidden p-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-md transition-colors"
+            aria-label="Toggle mobile menu"
           >
             {isMobileMenuOpen ? (
-              <FaTimes className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+              <FaTimes className="w-5 h-5" />
             ) : (
-              <FaBars className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+              <FaBars className="w-5 h-5" />
             )}
           </button>
         </div>
@@ -280,7 +286,7 @@ export function Header() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50">
+        <div className="lg:hidden fixed inset-0 z-[9999]">
           {/* Backdrop */}
           <div 
             className="fixed inset-0 bg-black/50 backdrop-blur-sm"
@@ -290,7 +296,7 @@ export function Header() {
           {/* Mobile menu panel */}
           <div 
             ref={mobileMenuRef}
-            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden"
+            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden z-[10000]"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-amber-200 dark:border-gray-700">

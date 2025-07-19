@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useLanguage } from '@/components/LanguageProvider';
 import { useRouter } from 'next/navigation';
 
@@ -39,18 +40,27 @@ function parseArticle(a: Article): ArticleParsed {
 function ArticleCard({ art, locale, onClick }: { art: ArticleParsed, locale: string, onClick: () => void }) {
   const lang = art.content[locale] ? locale : 'vi';
   const artContent = art.content[lang] || {};
-  // Lấy url ảnh nếu có
-  const imageUrl = art.image || artContent.image || '/images/placeholder.png';
+  // Lấy url ảnh từ database trước, sau đó từ content, cuối cùng là fallback
+  const imageUrl = art.image || artContent.image || '/images/1751360257771-Cam_banner_Le_Foin_logo.png';
   return (
     <div
       className="article-card"
       style={{ cursor: 'pointer', transition: 'transform 0.18s, box-shadow 0.18s', boxShadow: '0 2px 8px #eee', borderRadius: 16, background: '#fff', padding: 20, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 320 }}
     >
       {/* Hiển thị ảnh nếu có */}
-      <div style={{ width: '100%', height: 160, marginBottom: 8, borderRadius: 12, overflow: 'hidden', background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        {imageUrl ? (
-          <img src={imageUrl} alt={artContent.title || art.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" onError={e => { e.currentTarget.src = '/images/placeholder.png'; }} />
-        ) : null}
+      <div style={{ position: 'relative', width: '100%', height: 160, marginBottom: 8, borderRadius: 12, overflow: 'hidden', background: '#f5f5f5' }}>
+        <Image
+          src={imageUrl}
+          alt={artContent.title || art.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          style={{ objectFit: 'cover' }}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = '/images/1751360257771-Cam_banner_Le_Foin_logo.png';
+          }}
+          priority={false}
+        />
       </div>
       <div style={{ marginBottom: 8 }}>
         {art.tags && art.tags.length > 0 && (

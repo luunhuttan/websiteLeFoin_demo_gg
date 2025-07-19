@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useLanguage } from '@/components/LanguageProvider';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
@@ -94,7 +95,7 @@ export default function ArticleDetailPage() {
     title: article.title_vi || article.title_en || article.title || '',
     excerpt: article.excerpt_vi || article.excerpt_en || '',
     content: article.content_vi || article.content_en || '',
-    image: article.image || '/images/og-lefoin.jpg',
+    image: article.image || '/images/1751360257771-Cam_banner_Le_Foin_logo.png',
   };
 
   return (
@@ -180,7 +181,20 @@ export default function ArticleDetailPage() {
           </button>
         </div>
       </div>
-      <img src={art.image} alt={art.title} className="w-full max-h-80 object-cover rounded-xl border border-gray-200 dark:border-gray-700 mb-8" />
+      <div style={{ position: 'relative', width: '100%', height: 320, borderRadius: 12, overflow: 'hidden', marginBottom: 32 }}>
+        <Image
+          src={art.image}
+          alt={art.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 800px"
+          style={{ objectFit: 'cover' }}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = '/images/1751360257771-Cam_banner_Le_Foin_logo.png';
+          }}
+          priority={true}
+        />
+      </div>
       <h1 className="text-4xl font-extrabold mb-4 text-gray-900 dark:text-white">{art.title}</h1>
       <div className="text-lg mb-6 text-gray-500 dark:text-gray-400 font-medium">{art.excerpt}</div>
       <div className="text-xl leading-8 text-gray-800 dark:text-gray-100 mb-10" dangerouslySetInnerHTML={{ __html: art.content }} />

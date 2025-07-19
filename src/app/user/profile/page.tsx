@@ -117,9 +117,13 @@ export default function UserProfilePage() {
       <h2>Thông tin cá nhân</h2>
       <div style={{ textAlign: "center", marginBottom: 16 }}>
         <img
-          src={avatar || "/images/avatar-default.png"}
+          src={avatar || "/images/1751360257771-Cam_banner_Le_Foin_logo.png"}
           alt="avatar"
           style={{ width: 96, height: 96, borderRadius: "50%", objectFit: "cover", border: "2px solid #eee", margin: "0 auto" }}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = "/images/1751360257771-Cam_banner_Le_Foin_logo.png";
+          }}
         />
         <form onSubmit={handleUploadAvatar} style={{ marginTop: 8 }}>
           <input type="file" name="avatar" accept="image/*" className="mb-2" />

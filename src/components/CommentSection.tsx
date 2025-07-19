@@ -24,6 +24,7 @@ interface Comment {
     lastName: string;
     avatar: string;
     role: string;
+    email?: string;
   };
   replies: Comment[];
 }
@@ -135,11 +136,21 @@ export default function CommentSection({ articleId }: CommentSectionProps) {
     <div key={comment.id} className={`${level > 0 ? 'ml-6 border-l-2 border-amber-200 dark:border-amber-800 pl-4' : ''}`}>
       <div className={commentCardClass}>
         <div className="flex items-start gap-3">
-          <Avatar 
-            src={comment.user.avatar} 
-            alt={`${comment.user.firstName} ${comment.user.lastName}`}
-            className="w-10 h-10"
-          />
+          {comment.user.avatar ? (
+            <img 
+              src={comment.user.avatar} 
+              alt={`${comment.user.firstName} ${comment.user.lastName}`}
+              className="w-10 h-10 rounded-full object-cover border-2 border-amber-200"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.nextElementSibling?.classList.remove('hidden');
+              }}
+            />
+          ) : null}
+          <div className={`w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-sm border-2 border-amber-200 ${comment.user.avatar ? 'hidden' : ''}`}>
+            {(comment.user.firstName || comment.user.email?.split('@')[0] || 'U').charAt(0).toUpperCase()}
+          </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <Text className="font-bold text-amber-700 dark:text-amber-300 text-lg">

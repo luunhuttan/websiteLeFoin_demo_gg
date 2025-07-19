@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 interface Article {
@@ -189,13 +190,19 @@ export default function UserHistoryPage() {
                   }}
                   onClick={() => router.push(`/articles/${article.id}`)}
                 >
-                  <img 
-                    src={art.image || '/images/og-lefoin.jpg'} 
+                  <Image 
+                    src={art.image || '/images/1751360257771-Cam_banner_Le_Foin_logo.png'} 
                     alt={art.title || article.title}
+                    width={350}
+                    height={200}
                     style={{
                       width: '100%',
                       height: '200px',
                       objectFit: 'cover'
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/images/1751360257771-Cam_banner_Le_Foin_logo.png';
                     }}
                   />
                   <div style={{ padding: '24px' }}>

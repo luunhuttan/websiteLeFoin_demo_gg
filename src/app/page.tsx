@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, Suspense } from 'react';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useLanguage } from '@/components/LanguageProvider';
 import { useSearchParams } from 'next/navigation';
 import ReviewSummary from '@/components/ReviewSummary';
@@ -24,6 +25,7 @@ type ArticleParsed = {
   authorId?: number;
   tags: string[];
   tagObjs: any[];
+  image?: string;
 };
 
 const categoriesData = [
@@ -188,10 +190,20 @@ function HomePageContent() {
       </Head>
       {/* Featured section */}
       <section className="featured-article">
-        <img 
-          src={featuredArticle.content?.[locale]?.image || '/images/og-lefoin.jpg'}
-          alt={featuredArticle.title}
-        />
+        <div style={{ position: 'relative', width: 320, height: 220, borderRadius: 18, overflow: 'hidden', flexShrink: 0 }}>
+          <Image
+            src={featuredArticle.content?.[locale]?.image || '/images/1751360257771-Cam_banner_Le_Foin_logo.png'}
+            alt={featuredArticle.title}
+            fill
+            sizes="320px"
+            style={{ objectFit: 'cover' }}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = '/images/1751360257771-Cam_banner_Le_Foin_logo.png';
+            }}
+            priority={true}
+          />
+        </div>
         <div className="featured-content">
           <span className="category">{featuredArticle.content?.[locale]?.category}</span>
           <h2>{featuredArticle.title.split(' / ')[locale === 'vi' ? 0 : 1]}</h2>
@@ -255,11 +267,20 @@ function HomePageContent() {
               marginBottom: 24
             }}>
               {/* Ảnh bài viết */}
-              <img
-                src={art.content?.[locale]?.image || '/images/og-lefoin.jpg'}
-                alt={art.content?.[locale]?.title || art.title}
-                style={{ width: '100%', height: 180, objectFit: 'cover', borderTopLeftRadius: 18, borderTopRightRadius: 18 }}
-              />
+              <div style={{ position: 'relative', width: '100%', height: 180, borderTopLeftRadius: 18, borderTopRightRadius: 18, overflow: 'hidden' }}>
+                <Image
+                  src={art.image || art.content?.[locale]?.image || '/images/1751360257771-Cam_banner_Le_Foin_logo.png'}
+                  alt={art.content?.[locale]?.title || art.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  style={{ objectFit: 'cover' }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/images/1751360257771-Cam_banner_Le_Foin_logo.png';
+                  }}
+                  priority={false}
+                />
+              </div>
               <div style={{ padding: 20, flex: 1, display: 'flex', flexDirection: 'column' }}>
                 {/* Tag đầu tiên */}
                 {Array.isArray(art.tagObjs) && art.tagObjs.length > 0 && (

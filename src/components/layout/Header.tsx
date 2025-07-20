@@ -59,13 +59,18 @@ export function Header() {
     setMounted(true);
   }, []);
 
-  // Close mobile menu when route changes
+  // Đảm bảo luôn xóa class mobile-menu-open khi menu đóng hoặc chuyển route
   useEffect(() => {
     if (isMobileMenuOpen) {
-      setIsMobileMenuOpen(false);
+      document.body.classList.add('mobile-menu-open');
+    } else {
       document.body.classList.remove('mobile-menu-open');
     }
-  }, [pathname]);
+    // Khi chuyển route, luôn xóa class
+    return () => {
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, [isMobileMenuOpen, pathname]);
 
   // Close mobile menu when clicking outside
   useEffect(() => {

@@ -59,11 +59,20 @@ export function Header() {
     setMounted(true);
   }, []);
 
+  // Close mobile menu when route changes
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+      document.body.classList.remove('mobile-menu-open');
+    }
+  }, [pathname]);
+
   // Close mobile menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
         setIsMobileMenuOpen(false);
+        document.body.classList.remove('mobile-menu-open');
       }
     }
     if (isMobileMenuOpen) {
@@ -103,13 +112,18 @@ export function Header() {
     console.log('Mobile menu toggle clicked, current state:', isMobileMenuOpen);
     const newState = !isMobileMenuOpen;
     console.log('Setting mobile menu to:', newState);
-    setIsMobileMenuOpen(newState);
     
-    // Prevent body scroll when mobile menu is open
+    // Prevent rapid toggling
     if (newState) {
-      document.body.classList.add('mobile-menu-open');
-      console.log('Added mobile-menu-open class to body');
+      setIsMobileMenuOpen(true);
+      // Use requestAnimationFrame to ensure smooth transition
+      requestAnimationFrame(() => {
+        document.body.classList.add('mobile-menu-open');
+        console.log('Added mobile-menu-open class to body');
+      });
     } else {
+      setIsMobileMenuOpen(false);
+      // Remove class immediately for better responsiveness
       document.body.classList.remove('mobile-menu-open');
       console.log('Removed mobile-menu-open class from body');
     }
@@ -320,7 +334,12 @@ export function Header() {
           <div 
             ref={mobileMenuRef}
             className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-white to-amber-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out overflow-hidden z-[100000] mobile-menu-panel"
-            style={{ zIndex: 100000 }}
+            style={{ 
+              zIndex: 100000,
+              willChange: 'transform',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden'
+            }}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-amber-200 dark:border-gray-700 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-700">

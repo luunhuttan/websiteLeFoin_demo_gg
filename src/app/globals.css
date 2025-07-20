@@ -3204,18 +3204,20 @@ body.dark .about-hero-logo-img.dark-logo, body.dark .about-footer-logo-img.dark-
 
 /* Mobile menu z-index fix */
 .mobile-menu-overlay {
-  z-index: 99999 !important;
+  z-index: 9999 !important;
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
   bottom: 0 !important;
   background-color: rgba(0, 0, 0, 0.5) !important;
-  backdrop-filter: blur(4px) !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+  will-change: opacity !important;
 }
 
 .mobile-menu-panel {
-  z-index: 100000 !important;
+  z-index: 10000 !important;
   position: fixed !important;
   top: 0 !important;
   right: 0 !important;
@@ -3225,8 +3227,13 @@ body.dark .about-hero-logo-img.dark-logo, body.dark .about-footer-logo-img.dark-
   background-color: white !important;
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3) !important;
   transform: translateX(0) !important;
-  transition: transform 0.3s ease-in-out !important;
+  transition: transform 0.2s ease-out !important;
   overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  will-change: transform !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
 }
 
 /* Dark mode for mobile menu panel */
@@ -3243,11 +3250,49 @@ body.dark .about-hero-logo-img.dark-logo, body.dark .about-footer-logo-img.dark-
   opacity: 1 !important;
 }
 
-/* Prevent body scroll when mobile menu is open */
+/* Prevent body scroll when mobile menu is open - optimized for mobile */
 body.mobile-menu-open {
   overflow: hidden !important;
-  position: fixed !important;
+  position: relative !important;
   width: 100% !important;
+  height: 100% !important;
+  touch-action: none !important;
+}
+
+/* Optimize for mobile devices */
+@media (max-width: 768px) {
+  .mobile-menu-overlay {
+    z-index: 999 !important;
+  }
+  
+  .mobile-menu-panel {
+    z-index: 1000 !important;
+    transition: transform 0.15s ease-out !important;
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+  }
+  
+  body.mobile-menu-open {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* Optimize touch events */
+  .mobile-menu-panel * {
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+  }
+  
+  /* Reduce animation complexity on mobile */
+  .mobile-menu-panel .transition-all {
+    transition: all 0.15s ease-out !important;
+  }
 }
 
 
